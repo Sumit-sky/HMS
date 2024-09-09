@@ -1,26 +1,25 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Card, Form, Button, Alert, Spinner } from "react-bootstrap";
-import customer_auth_img from "../../Assets/customer_auth_img.png";
+import { Card, Form, Button, Alert } from "react-bootstrap";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import GoogleAuth from "./googleAuth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import hotel_auth_img from "../../Assets/hotel_auth_img.png";
 import logo from "../../Assets/logo.png";
 import { Link } from "react-router-dom";
 
-const divStyle = {
-  backgroundImage: `url(${customer_auth_img})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  height: "100vh",
-  width: "50%",
-  borderRadius: "0",
-};
+export default function HotelAuth() {
+  const divStyle = {
+    backgroundImage: `url(${hotel_auth_img})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    height: "100vh",
+    width: "50%",
+    borderRadius: "0",
+  };
 
-export default function CustomerAuth() {
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -29,7 +28,6 @@ export default function CustomerAuth() {
   } = useForm();
 
   const loginEmailAndPassword = async (data) => {
-    setLoading(true);
     const auth = getAuth();
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -38,7 +36,7 @@ export default function CustomerAuth() {
         data.password
       );
       const user = userCredential.user;
-      const userDocRef = doc(db, "customers", user.uid);
+      const userDocRef = doc(db, "hotels", user.uid);
       const userDocSnap = await getDoc(userDocRef);
       if (userDocSnap.exists()) {
         if (!user.emailVerified) {
@@ -55,7 +53,14 @@ export default function CustomerAuth() {
 
   return (
     <div className="d-flex min-vh-100">
-      <div style={divStyle} className="d-none d-md-block"></div>
+      <div style={divStyle} className="d-none d-md-block">
+        <h1 className="w-100 text-start p-3 text-white">
+          Welcome{" "}
+          <span style={{ color: "#6750A4" }} className="fw-bold">
+            BACK
+          </span>
+        </h1>
+      </div>
       <div className="col d-flex justify-content-center align-items-center p-3">
         <Card className="border-0 w-100" style={{ maxWidth: "400px" }}>
           <Card.Body>
@@ -63,8 +68,8 @@ export default function CustomerAuth() {
               className="d-flex flex-column align-items-center"
               onSubmit={handleSubmit(loginEmailAndPassword)}
             >
-              <div className="d-flex justify-content-between w-100">
-                <h1 className="text-start text-xl fw-bold">Login</h1>
+              <div className="d-flex justify-content-between w-100 mb-3">
+                <h1 className="text-start text-xl fw-bold">Sign In</h1>
                 <img
                   src={logo}
                   alt=""
@@ -73,9 +78,6 @@ export default function CustomerAuth() {
                   className=""
                 />
               </div>
-              <p className="text-start mt-2 text-muted w-100">
-                Login to your account in seconds
-              </p>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form.Group className="w-100 mb-3">
                 <Form.Control
@@ -134,11 +136,11 @@ export default function CustomerAuth() {
                 type="submit"
                 style={{ height: "45px" }}
               >
-                {loading ? <Spinner animation="border" size="sm" /> : "Log in"}
+                Log in
               </Button>
               <Link
-                to="/signup"
-                className="mt-3 text-muted text-decoration-none text-start w-100"
+                to="/hotelsignup"
+                className="mt-3 text-muted text-decoration-none text-center w-100"
               >
                 Don't have an account?{" "}
                 <span
@@ -149,7 +151,7 @@ export default function CustomerAuth() {
                 </span>
               </Link>
             </Form>
-            <GoogleAuth type={"customer"} />
+            <GoogleAuth type={"hotel"} />
           </Card.Body>
         </Card>
       </div>

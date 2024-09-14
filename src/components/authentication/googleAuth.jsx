@@ -1,5 +1,5 @@
 import React, { useState } from "react"; // Import useState to manage the error state
-import { Button } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 import { auth, googleProvider, db } from "../../config/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -13,7 +13,7 @@ export default function GoogleAuth(type) {
       const user = userCredential.user;
       // Check if the user document already exists
       let userDocRef;
-      if (type.type === "hotel") { // Use strict equality === for comparison
+      if (type.type === "hotel") {
         userDocRef = doc(db, "hotels", user.uid);
       } else {
         userDocRef = doc(db, "customers", user.uid);
@@ -33,12 +33,17 @@ export default function GoogleAuth(type) {
       }
       console.log("with google");
     } catch (error) {
-      setError(error.message); // Correctly use setError from useState
+      setError(error.message);
     }
   };
 
   return (
     <div className="mt-4 text-muted">
+      {error && (
+        <Alert variant="danger" className="text-danger mt-2">
+          {error}
+        </Alert>
+      )}{" "}
       <p>Or continue with</p>
       <Button variant="none" onClick={googleSignUp}>
         <img
@@ -48,7 +53,6 @@ export default function GoogleAuth(type) {
         />
       </Button>
       {/* <Button onClick={logout}>Logout</Button> */}
-      {error && <p className="text-danger mt-2">{error}</p>} {/* Display error message */}
     </div>
   );
 }

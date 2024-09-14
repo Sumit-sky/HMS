@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Card, Form, Button, Alert } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "../../config/firebase";
+import { Link } from "react-router-dom";
+import { auth, db } from "../../../config/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signOut,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import hotel_auth_img from "../../Assets/hotel_auth_img.png";
-import logo from "../../Assets/logo.png";
-import GoogleAuth from "./googleAuth";
+import customer_auth_img from "../../../Assets/customer_auth_img.png";
+import GoogleAuth from "../../authentication/googleAuth";
+import logo from "../../../Assets/logo.png";
 
-export default function HotelRegister() {
+export default function CustomerRegister() {
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
   const [isVerifying, setVerifying] = useState(false);
+
   const navigate = useNavigate();
   const {
     register,
@@ -25,7 +27,7 @@ export default function HotelRegister() {
   } = useForm();
 
   const divStyle = {
-    backgroundImage: `url(${hotel_auth_img})`,
+    backgroundImage: `url(${customer_auth_img})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     height: "100vh",
@@ -45,13 +47,14 @@ export default function HotelRegister() {
       setMsg("A verification email has been sent. Please check your inbox.");
       setVerifying(true);
 
-      await setDoc(doc(db, "hotels", userCredential.user.uid), {
-        hotelName: data.hotelName,
+      await setDoc(doc(db, "customers", userCredential.user.uid), {
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
-        type: "hotel",
+        type: "customer",
       });
-      console.log("email and password");
-      //   navigate("/login");
+      // console.log("email and password");
+      // navigate("/home");
     } catch (error) {
       setError(error.message);
     }
@@ -63,7 +66,7 @@ export default function HotelRegister() {
         auth.currentUser.reload().then(() => {
           if (auth.currentUser.emailVerified) {
             setVerifying(false);
-            navigate("/hotellogin");
+            navigate("/login");
           }
         });
       }, 2000);
@@ -82,14 +85,7 @@ export default function HotelRegister() {
 
   return (
     <div className="d-flex min-vh-100">
-      <div style={divStyle} className="d-none d-md-block">
-        <h1 className="w-100 text-start p-3 text-white">
-          Grow With{" "}
-          <span style={{ color: "#6750A4" }} className="fw-bold">
-            US
-          </span>
-        </h1>
-      </div>
+      <div style={divStyle} className="d-none d-md-block"></div>
       <div className="col d-flex justify-content-center align-items-center p-3">
         <Card className="border-0 w-100" style={{ maxWidth: "400px" }}>
           <Card.Body>
@@ -97,7 +93,7 @@ export default function HotelRegister() {
               className="d-flex flex-column align-items-center"
               onSubmit={handleSubmit(signUp)}
             >
-              <div className="d-flex justify-content-between w-100 mb-3">
+              <div className="d-flex justify-content-between w-100">
                 <h1 className="text-start text-xl fw-bold">Sign Up</h1>
                 <img
                   src={logo}
@@ -107,9 +103,12 @@ export default function HotelRegister() {
                   className=""
                 />
               </div>
+              <p className="text-start mt-2 text-muted w-100">
+                Create your new account in seconds
+              </p>
               {error && <Alert variant="danger">{error}</Alert>}
               {msg && <Alert variant="primary">{msg}</Alert>}
-              {/* <Form.Group className="w-100 mb-3">
+              <Form.Group className="w-100 mb-3">
                 <Form.Control
                   type="text"
                   size="lg"
@@ -122,15 +121,15 @@ export default function HotelRegister() {
                 <div className="d-flex w-100 text-start text-danger">
                   {errors.firstName && <span>{errors.firstName.message}</span>}
                 </div>
-              </Form.Group> */}
+              </Form.Group>
               <Form.Group className="w-100 mb-3">
                 <Form.Control
                   type="text"
                   size="lg"
-                  placeholder="Hotel Name"
+                  placeholder="Last Name"
                   className="text-muted fs-5"
-                  {...register("hotelName", {
-                    required: "Hotel Name is required",
+                  {...register("lastName", {
+                    required: "Last Name is required",
                   })}
                 />
                 <div className="d-flex w-100 text-start text-danger">
@@ -195,27 +194,26 @@ export default function HotelRegister() {
                 )}
               </div>
               <Button
-                variant="primary"
                 className="w-100"
                 type="submit"
-                style={{ height: "45px" }}
+                style={{ height: "45px",background:"#7754F6" }}
               >
                 Create an Account
               </Button>
               <Link
-                to="/hotellogin"
-                className="mt-3 text-muted text-decoration-none text-center w-100"
+                to="/signin"
+                className="mt-3 text-muted text-decoration-none text-start w-100"
               >
-                Already have an account?{" "}
+                Already a member?{" "}
                 <span
                   className=""
                   style={{ color: "#7754F6", textDecoration: "underline" }}
                 >
-                  Login
+                  Sign In
                 </span>
               </Link>
             </Form>
-            <GoogleAuth type={"hotel"} />
+            <GoogleAuth type={"customer"} />
           </Card.Body>
         </Card>
       </div>

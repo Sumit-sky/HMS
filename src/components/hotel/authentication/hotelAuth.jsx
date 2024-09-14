@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
-import GoogleAuth from "./googleAuth";
+import GoogleAuth from "../../authentication/googleAuth";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../config/firebase";
-import hotel_auth_img from "../../Assets/hotel_auth_img.png";
-import logo from "../../Assets/logo.png";
+import { db } from "../../../config/firebase";
+import hotel_auth_img from "../../../Assets/hotel_auth_img.png";
+import logo from "../../../Assets/logo.png";
 import { Link } from "react-router-dom";
 
 export default function HotelAuth() {
@@ -126,20 +126,19 @@ export default function HotelAuth() {
                     Remember Me
                   </Form.Label>
                 </Form.Group>
-                <a href="#" className="text-primary">
+                <a href="#" className="" style={{ color:"#7754F6" }}>
                   Forgot Password?
                 </a>
               </div>
               <Button
-                variant="primary"
                 className="w-100"
                 type="submit"
-                style={{ height: "45px" }}
+                style={{ height: "45px",background:"#7754F6" }}
               >
                 Log in
               </Button>
               <Link
-                to="/hotelsignup"
+                to="/hotel/signup"
                 className="mt-3 text-muted text-decoration-none text-center w-100"
               >
                 Don't have an account?{" "}

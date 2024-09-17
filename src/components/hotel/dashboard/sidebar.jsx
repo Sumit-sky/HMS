@@ -1,54 +1,81 @@
-import React from "react";
-import { Button } from "react-bootstrap";
+import React, { useState } from "react";
+import SidebarButton from "./sideBarButton";
+import IconDashboard from "../../../Assets/hotel_svgs/iconDashboard";
+import IconFrontDesk from "../../../Assets/hotel_svgs/iconFrontDesk";
+import IconDeals from "../../../Assets/hotel_svgs/iconDeals";
+import IconGuest from "../../../Assets/hotel_svgs/iconGuest";
+import IconRate from "../../../Assets/hotel_svgs/iconRate";
+import IconRooms from "../../../Assets/hotel_svgs/iconRooms";
 
 export default function Hotel_Sidebar({ active, setActive }) {
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarVisible(!isSidebarVisible);
+  };
+
   return (
-    <div
-      className="d-flex flex-column bg-dark min-vh-100"
-      style={{ width: "200px" }}
-    >
-      <Button
-        className="bg-transparent border-0 fs-4 align-items-lg-start"
-        style={{ color: active === 0 ? "black" : "#5D6679" }}
-        onClick={() => setActive(0)}
+    <div className="d-flex">
+      {isSidebarVisible && (
+        <div
+          className="d-flex flex-column min-vh-100 px-1"
+          style={{ width: "250px" }}
+        >
+          <SidebarButton
+            index={0}
+            active={active}
+            setActive={setActive}
+            icon={IconDashboard}
+            label="Dashboard"
+          />
+          <SidebarButton
+            index={1}
+            active={active}
+            setActive={setActive}
+            icon={IconFrontDesk}
+            label="Front Desk"
+          />
+          <SidebarButton
+            index={2}
+            active={active}
+            setActive={setActive}
+            icon={IconGuest}
+            label="Guest"
+          />
+          <SidebarButton
+            index={3}
+            active={active}
+            setActive={setActive}
+            icon={IconRooms}
+            label="Rooms"
+          />
+          <SidebarButton
+            index={4}
+            active={active}
+            setActive={setActive}
+            icon={IconDeals}
+            label="Deals"
+          />
+          <SidebarButton
+            index={5}
+            active={active}
+            setActive={setActive}
+            icon={IconRate}
+            label="Rate"
+          />
+        </div>
+      )}
+      <button
+        onClick={toggleSidebar}
+        style={{
+          position: "absolute",
+          left: isSidebarVisible ? "250px" : "0px",
+          top: "76px",
+        }}
+        className="btn bg-body rounded-end-pill fs-5"
       >
-        Dashboard
-      </Button>
-      <Button
-        className="bg-transparent border-0 fs-4 align-items-lg-start"
-        style={{ color: active === 1 ? "black" : "#5D6679" }}
-        onClick={() => setActive(1)}
-      >
-        Front Desk
-      </Button>
-      <Button
-        className="bg-transparent border-0 fs-4 align-items-lg-start"
-        style={{ color: active === 2 ? "black" : "#5D6679" }}
-        onClick={() => setActive(2)}
-      >
-        Guest
-      </Button>
-      <Button
-        className="bg-transparent border-0 fs-4 align-items-lg-start"
-        style={{ color: active === 3 ? "black" : "#5D6679" }}
-        onClick={() => setActive(3)}
-      >
-        Rooms
-      </Button>
-      <Button
-        className="bg-transparent border-0 fs-4 align-items-lg-start"
-        style={{ color: active === 4 ? "black" : "#5D6679" }}
-        onClick={() => setActive(4)}
-      >
-        Deal
-      </Button>
-      <Button
-        className="bg-transparent border-0 fs-4 align-items-lg-start"
-        style={{ color: active === 5 ? "black" : "#5D6679" }}
-        onClick={() => setActive(5)}
-      >
-        Rate
-      </Button>
+        {isSidebarVisible ? "<" : ">"}
+      </button>
     </div>
   );
 }

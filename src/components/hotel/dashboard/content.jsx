@@ -20,5 +20,9 @@ export default function Content({ active }) {
     }
   };
 
-  return <div className="m-5 fs-4 text-black" >{renderContent()}</div>;
+  return (
+    <div className=" fs-4 text-black bg-dark w-100 text-white min-vh-100">
+      {renderContent()}
+    </div>
+  );
 }

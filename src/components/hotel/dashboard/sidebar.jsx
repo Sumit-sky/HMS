@@ -7,7 +7,7 @@ import IconGuest from "../../../Assets/hotel_svgs/iconGuest";
 import IconRate from "../../../Assets/hotel_svgs/iconRate";
 import IconRooms from "../../../Assets/hotel_svgs/iconRooms";
 
-export default function Hotel_Sidebar({ active, setActive }) {
+export default function HotelSidebar({ active, setActive }) {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
   const toggleSidebar = () => {

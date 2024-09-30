@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Card, Form, Button, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { auth, db } from "../../../config/firebase";
 import {
@@ -28,11 +27,6 @@ export default function CustomerRegister() {
 
   const divStyle = {
     backgroundImage: `url(${customer_auth_img})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    height: "100vh",
-    width: "50%",
-    borderRadius: "0",
   };
 
   const signUp = async (data) => {
@@ -84,138 +78,134 @@ export default function CustomerRegister() {
   };
 
   return (
-    <div className="d-flex min-vh-100">
-      <div style={divStyle} className="d-none d-md-block"></div>
-      <div className="col d-flex justify-content-center align-items-center p-3">
-        <Card className="border-0 w-100" style={{ maxWidth: "400px" }}>
-          <Card.Body>
-            <Form
-              className="d-flex flex-column align-items-center"
-              onSubmit={handleSubmit(signUp)}
-            >
-              <div className="d-flex justify-content-between w-100">
-                <h1 className="text-start text-xl fw-bold">Sign Up</h1>
-                <img
-                  src={logo}
-                  alt=""
-                  width={"80px"}
-                  height={"60px"}
-                  className=""
-                />
-              </div>
-              <p className="text-start mt-2 text-muted w-100">
-                Create your new account in seconds
-              </p>
-              {error && <Alert variant="danger">{error}</Alert>}
-              {msg && <Alert variant="primary">{msg}</Alert>}
-              <Form.Group className="w-100 mb-3">
-                <Form.Control
-                  type="text"
-                  size="lg"
-                  placeholder="First Name"
-                  className="text-muted fs-5"
-                  {...register("firstName", {
-                    required: "First Name is required",
-                  })}
-                />
-                <div className="d-flex w-100 text-start text-danger">
-                  {errors.firstName && <span>{errors.firstName.message}</span>}
-                </div>
-              </Form.Group>
-              <Form.Group className="w-100 mb-3">
-                <Form.Control
-                  type="text"
-                  size="lg"
-                  placeholder="Last Name"
-                  className="text-muted fs-5"
-                  {...register("lastName", {
-                    required: "Last Name is required",
-                  })}
-                />
-                <div className="d-flex w-100 text-start text-danger">
-                  {errors.lastName && <span>{errors.lastName.message}</span>}
-                </div>
-              </Form.Group>
-              <Form.Group className="w-100 mb-3">
-                <Form.Control
-                  type="email"
-                  size="lg"
-                  placeholder="Email"
-                  className="text-muted fs-5"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /\S+@\S+\.\S+/,
-                      message: "Invalid Email",
-                    },
-                  })}
-                />
-                <div className="d-flex w-100 text-start text-danger">
-                  {errors.email && <span>{errors.email.message}</span>}
-                </div>
-              </Form.Group>
-              <Form.Group className="w-100 mb-3">
-                <Form.Control
-                  type="password"
-                  size="lg"
-                  placeholder="Create Password"
-                  className="text-muted fs-5"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
-                    },
-                  })}
-                />
-                <div className="d-flex w-100 text-start text-danger">
-                  {errors.password && <span>{errors.password.message}</span>}
-                </div>
-              </Form.Group>
-              <div className="d-flex w-100 flex-column align-items-start justify-content-between mb-3">
-                <Form.Group className="d-flex align-items-center">
-                  <Form.Check
-                    type="checkbox"
-                    id="termsAndCondition"
-                    className="me-2"
-                    {...register("termsAndCondition", {
-                      required:
-                        "You must agree to the terms and privacy policy",
-                    })}
-                  />
-                  <Form.Label htmlFor="termsAndCondition" className="mb-0">
-                    I agree to the terms and privacy policy
-                  </Form.Label>
-                </Form.Group>
-                {errors.termsAndCondition && (
-                  <div className="d-flex w-100 text-start text-danger mb-3">
-                    <span>{errors.termsAndCondition.message}</span>
-                  </div>
-                )}
-              </div>
-              <Button
-                className="w-100"
-                type="submit"
-                style={{ height: "45px",background:"#7754F6" }}
-              >
-                Create an Account
-              </Button>
-              <Link
-                to="/signin"
-                className="mt-3 text-muted text-decoration-none text-start w-100"
-              >
-                Already a member?{" "}
-                <span
-                  className=""
-                  style={{ color: "#7754F6", textDecoration: "underline" }}
-                >
-                  Sign In
-                </span>
+    <div className="flex min-h-screen">
+      <div style={divStyle} className="hidden md:block w-1/2 bg-cover bg-center"></div>
+      <div className="flex flex-col justify-center items-center w-1/2 max-md:w-full p-3">
+        <div className="w-full max-w-lg">
+          <form
+            className="flex flex-col items-center"
+            onSubmit={handleSubmit(signUp)}
+          >
+            <div className="flex justify-between w-full items-center mb-3">
+              <h1 className="text-2xl font-bold text-left">Sign Up</h1>
+              <Link to={"/"}>
+                <img src={logo} alt="Logo" className="w-24 h-16" />
               </Link>
-            </Form>
-            <GoogleAuth type={"customer"} />
-          </Card.Body>
-        </Card>
+            </div>
+            <p className="text-left my-2 text-gray-500 w-full">
+              Create your account in seconds
+            </p>
+            {error && (
+              <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-2 w-full mt-2">
+                {error}
+              </div>
+            )}
+            {msg && (
+              <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-2 w-full mt-2">
+                {msg}
+              </div>
+            )}
+            <div className="w-full mb-3">
+              <input
+                type="text"
+                className="w-full p-3 border text-lg border-gray-300 rounded-lg text-gray-700 outline-none"
+                placeholder="First Name"
+                {...register("firstName", {
+                  required: "First Name is required",
+                })}
+              />
+              {errors.firstName && (
+                <p className="text-red-600 text-left mt-1">
+                  {errors.firstName.message}
+                </p>
+              )}
+            </div>
+            <div className="w-full mb-3">
+              <input
+                type="text"
+                className="w-full p-3 border text-lg border-gray-300 rounded-md text-gray-700 outline-none"
+                placeholder="Last Name"
+                {...register("lastName", {
+                  required: "Last Name is required",
+                })}
+              />
+              {errors.lastName && (
+                <p className="text-red-600 text-left mt-1">
+                  {errors.lastName.message}
+                </p>
+              )}
+            </div>
+            <div className="w-full mb-3">
+              <input
+                type="email"
+                className="w-full p-3 border text-lg border-gray-300 rounded-md text-gray-700 outline-none"
+                placeholder="Email"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: "Invalid Email",
+                  },
+                })}
+              />
+              {errors.email && (
+                <p className="text-red-600 text-left mt-1">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+            <div className="w-full mb-3">
+              <input
+                type="password"
+                className="w-full p-3 border border-gray-300 text-lg rounded-md text-gray-700 outline-none"
+                placeholder="Create Password"
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
+              />
+              {errors.password && (
+                <p className="text-red-600 text-left mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col items-start w-full mb-3">
+              <div className="flex items-center h-max">
+                <input
+                  type="checkbox"
+                  id="termsAndCondition"
+                  className="mr-2 h-4 w-4 accent-violet-500"
+                  {...register("termsAndCondition", {
+                    required: "You must agree to the terms and privacy policy",
+                  })}
+                />
+                <label htmlFor="termsAndCondition" className="text-gray-700">
+                  I agree to the terms and privacy policy
+                </label>
+              </div>
+              {errors.termsAndCondition && (
+                <p className="text-red-600 text-left mt-1">
+                  {errors.termsAndCondition.message}
+                </p>
+              )}
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-violet-500 text-white py-3 rounded-md"
+            >
+              Create an Account
+            </button>
+            <Link to="/signin" className="mt-3 text-gray-500 w-full text-left">
+              Already a member?{" "}
+              <span className="text-violet-500 hover:underline">Sign In</span>
+            </Link>
+          </form>
+          <GoogleAuth type={"customer"} />
+        </div>
       </div>
     </div>
   );

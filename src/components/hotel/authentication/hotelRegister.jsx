@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Card, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../../../config/firebase";
 import {
@@ -26,11 +25,6 @@ export default function HotelRegister() {
 
   const divStyle = {
     backgroundImage: `url(${hotel_auth_img})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    height: "100vh",
-    width: "50%",
-    borderRadius: "0",
   };
 
   const signUp = async (data) => {
@@ -50,8 +44,6 @@ export default function HotelRegister() {
         email: data.email,
         type: "hotel",
       });
-      console.log("email and password");
-      //   navigate("/login");
     } catch (error) {
       setError(error.message);
     }
@@ -81,142 +73,125 @@ export default function HotelRegister() {
   };
 
   return (
-    <div className="d-flex min-vh-100">
-      <div style={divStyle} className="d-none d-md-block">
-        <h1 className="w-100 text-start p-3 text-white">
-          Grow With{" "}
-          <span style={{ color: "#6750A4" }} className="fw-bold">
-            US
-          </span>
+    <div className="flex min-h-screen">
+      <div
+        className="hidden md:block w-1/2 bg-cover bg-center"
+        style={divStyle}
+      >
+        <h1 className="w-full text-start p-3 text-4xl text-white">
+          Grow With <span className="font-bold text-violet-500">US</span>
         </h1>
       </div>
-      <div className="col d-flex justify-content-center align-items-center p-3">
-        <Card className="border-0 w-100" style={{ maxWidth: "400px" }}>
-          <Card.Body>
-            <Form
-              className="d-flex flex-column align-items-center"
-              onSubmit={handleSubmit(signUp)}
-            >
-              <div className="d-flex justify-content-between w-100 mb-3">
-                <h1 className="text-start text-xl fw-bold">Sign Up</h1>
-                <img
-                  src={logo}
-                  alt=""
-                  width={"80px"}
-                  height={"60px"}
-                  className=""
-                />
-              </div>
-              {error && <Alert variant="danger">{error}</Alert>}
-              {msg && <Alert variant="primary">{msg}</Alert>}
-              {/* <Form.Group className="w-100 mb-3">
-                <Form.Control
-                  type="text"
-                  size="lg"
-                  placeholder="First Name"
-                  className="text-muted fs-5"
-                  {...register("firstName", {
-                    required: "First Name is required",
-                  })}
-                />
-                <div className="d-flex w-100 text-start text-danger">
-                  {errors.firstName && <span>{errors.firstName.message}</span>}
-                </div>
-              </Form.Group> */}
-              <Form.Group className="w-100 mb-3">
-                <Form.Control
-                  type="text"
-                  size="lg"
-                  placeholder="Hotel Name"
-                  className="text-muted fs-5"
-                  {...register("hotelName", {
-                    required: "Hotel Name is required",
-                  })}
-                />
-                <div className="d-flex w-100 text-start text-danger">
-                  {errors.lastName && <span>{errors.lastName.message}</span>}
-                </div>
-              </Form.Group>
-              <Form.Group className="w-100 mb-3">
-                <Form.Control
-                  type="email"
-                  size="lg"
-                  placeholder="Email"
-                  className="text-muted fs-5"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /\S+@\S+\.\S+/,
-                      message: "Invalid Email",
-                    },
-                  })}
-                />
-                <div className="d-flex w-100 text-start text-danger">
-                  {errors.email && <span>{errors.email.message}</span>}
-                </div>
-              </Form.Group>
-              <Form.Group className="w-100 mb-3">
-                <Form.Control
-                  type="password"
-                  size="lg"
-                  placeholder="Create Password"
-                  className="text-muted fs-5"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
-                    },
-                  })}
-                />
-                <div className="d-flex w-100 text-start text-danger">
-                  {errors.password && <span>{errors.password.message}</span>}
-                </div>
-              </Form.Group>
-              <div className="d-flex w-100 flex-column align-items-start justify-content-between mb-3">
-                <Form.Group className="d-flex align-items-center">
-                  <Form.Check
-                    type="checkbox"
-                    id="termsAndCondition"
-                    className="me-2"
-                    {...register("termsAndCondition", {
-                      required:
-                        "You must agree to the terms and privacy policy",
-                    })}
-                  />
-                  <Form.Label htmlFor="termsAndCondition" className="mb-0">
-                    I agree to the terms and privacy policy
-                  </Form.Label>
-                </Form.Group>
-                {errors.termsAndCondition && (
-                  <div className="d-flex w-100 text-start text-danger mb-3">
-                    <span>{errors.termsAndCondition.message}</span>
-                  </div>
-                )}
-              </div>
-              <Button
-                className="w-100"
-                type="submit"
-                style={{ height: "45px",background:"#7754F6" }}
-              >
-                Create an Account
-              </Button>
-              <Link
-                to="/hotel/signin"
-                className="mt-3 text-muted text-decoration-none text-center w-100"
-              >
-                Already have an account?{" "}
-                <span
-                  className=""
-                  style={{ color: "#7754F6", textDecoration: "underline" }}
-                >
-                  Sign In
-                </span>
+      <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-3">
+        <div className="w-full max-w-lg">
+          <form
+            className="flex flex-col items-center"
+            onSubmit={handleSubmit(signUp)}
+          >
+            <div className="flex justify-between items-center w-full mb-3">
+              <h1 className="text-left text-2xl font-bold">Sign Up</h1>
+              <Link to={"/"}>
+                <img src={logo} alt="StayPedia Logo" className="w-24 h-16" />
               </Link>
-            </Form>
-            <GoogleAuth type={"hotel"} />
-          </Card.Body>
-        </Card>
+            </div>
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                <span>{error}</span>
+              </div>
+            )}
+            {msg && (
+              <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-4">
+                <span>{msg}</span>
+              </div>
+            )}
+            <div className="w-full mb-3">
+              <input
+                type="text"
+                className="w-full p-3 border border-gray-300 rounded-lg text-lg text-gray-600 outline-none"
+                placeholder="Hotel Name"
+                {...register("hotelName", {
+                  required: "Hotel Name is required",
+                })}
+              />
+              {errors.hotelName && (
+                <div className="text-red-600 text-sm mt-1">
+                  {errors.hotelName.message}
+                </div>
+              )}
+            </div>
+            <div className="w-full mb-3">
+              <input
+                type="email"
+                className="w-full p-3 border border-gray-300 rounded-lg text-lg text-gray-600 outline-none"
+                placeholder="Email"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: "Invalid Email",
+                  },
+                })}
+              />
+              {errors.email && (
+                <div className="text-red-600 text-sm mt-1">
+                  {errors.email.message}
+                </div>
+              )}
+            </div>
+            <div className="w-full mb-3">
+              <input
+                type="password"
+                className="w-full p-3 border border-gray-300 rounded-lg text-lg text-gray-600 outline-none"
+                placeholder="Create Password"
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
+              />
+              {errors.password && (
+                <div className="text-red-600 text-sm mt-1">
+                  {errors.password.message}
+                </div>
+              )}
+            </div>
+            <div className="w-full flex flex-col items-start mb-3">
+              <label className="flex items-center h-max">
+                <input
+                  type="checkbox"
+                  className="accent-violet-500 w-4 h-4"
+                  {...register("termsAndCondition", {
+                    required: "You must agree to the terms and privacy policy",
+                  })}
+                />
+                <span className="ml-2">
+                  I agree to the terms and privacy policy
+                </span>
+              </label>
+              {errors.termsAndCondition && (
+                <div className="text-red-600 text-sm mt-1">
+                  {errors.termsAndCondition.message}
+                </div>
+              )}
+            </div>
+            <button
+              className="w-full py-3 text-white rounded-lg bg-violet-500"
+              type="submit"
+            >
+              Create an Account
+            </button>
+            <Link
+              to="/hotel/signin"
+              className="mt-3 text-gray-500 w-full text-left"
+            >
+              Already have an account?{" "}
+              <span className="hover:underline text-violet-500">Sign In</span>
+            </Link>
+          </form>
+          <GoogleAuth type={"hotel"} />
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 
 export default function SidebarButton({
   index,
@@ -9,16 +8,16 @@ export default function SidebarButton({
   label,
 }) {
   return (
-    <Button
-      className="border-0 fs-5 d-flex justify-content-start align-items-center"
-      style={{
-        color: active === index ? "#1366D9" : "#5D6679",
-        background: active === index ? "#E8F1FD" : "#fff",
-      }}
+    <button
+      className={`flex items-center text-lg p-3 w-full rounded-md transition-all duration-200 ${
+        active === index
+          ? "bg-blue-100 text-blue-600"
+          : "bg-white text-gray-600"
+      }`}
       onClick={() => setActive(index)}
     >
       <Icon active={active === index} />
-      {label}
-    </Button>
+      <span className="ml-3">{label}</span>
+    </button>
   );
 }

@@ -1,5 +1,4 @@
 import React, { useState } from "react"; // Import useState to manage the error state
-import { Alert, Button } from "react-bootstrap";
 import { auth, googleProvider, db } from "../../config/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -38,21 +37,21 @@ export default function GoogleAuth(type) {
   };
 
   return (
-    <div className="mt-4 text-muted">
+    <div className="mt-4 text-gray-500">
       {error && (
-        <Alert variant="danger" className="text-danger mt-2">
-          {error}
-        </Alert>
-      )}{" "}
-      <p>Or continue with</p>
-      <Button variant="none" onClick={googleSignUp}>
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-2">
+          <p>{error}</p>
+        </div>
+      )}
+      <p className="my-2">Or continue with</p>
+      <button className="my-2" onClick={googleSignUp}>
         <img
           width={"50px"}
           src="https://storage.googleapis.com/support-kms-prod/ZAl1gIwyUsvfwxoW9ns47iJFioHXODBbIkrK"
           alt="Google Login"
         />
-      </Button>
-      {/* <Button onClick={logout}>Logout</Button> */}
+      </button>
+      {/* <button onClick={logout}>Logout</button> */}
     </div>
   );
 }

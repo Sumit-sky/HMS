@@ -21,7 +21,7 @@ export default function Content({ active }) {
   };
 
   return (
-    <div className=" fs-4 text-black bg-dark w-100 text-white min-vh-100">
+    <div className="text-xl text-white bg-gray-800 w-full min-h-screen p-6">
       {renderContent()}
     </div>
   );

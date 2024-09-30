@@ -8,7 +8,7 @@ export default function HotelDashboard() {
   return (
     <>
       <HotelNavbar />
-      <div className="d-flex">
+      <div className="flex">
         <HotelSidebar active={active} setActive={setActive} />
         <Content active={active} />
       </div>

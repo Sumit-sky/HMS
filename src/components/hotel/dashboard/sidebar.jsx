@@ -6,6 +6,7 @@ import IconDeals from "../../../Assets/hotel_svgs/iconDeals";
 import IconGuest from "../../../Assets/hotel_svgs/iconGuest";
 import IconRate from "../../../Assets/hotel_svgs/iconRate";
 import IconRooms from "../../../Assets/hotel_svgs/iconRooms";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 export default function HotelSidebar({ active, setActive }) {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -15,12 +16,9 @@ export default function HotelSidebar({ active, setActive }) {
   };
 
   return (
-    <div className="d-flex">
+    <div className="flex">
       {isSidebarVisible && (
-        <div
-          className="d-flex flex-column min-vh-100 px-1"
-          style={{ width: "250px" }}
-        >
+        <div className="flex flex-col min-h-screen w-64 p-2 shadow-lg text-white">
           <SidebarButton
             index={0}
             active={active}
@@ -67,14 +65,11 @@ export default function HotelSidebar({ active, setActive }) {
       )}
       <button
         onClick={toggleSidebar}
-        style={{
-          position: "absolute",
-          left: isSidebarVisible ? "250px" : "0px",
-          top: "76px",
-        }}
-        className="btn bg-body rounded-end-pill fs-5"
+        className={`absolute transition-all duration-300 bg-white rounded-[100%] border w-8 h-8 flex justify-center items-center ${
+          isSidebarVisible ? "left-60" : "left-0"
+        } top-24`}
       >
-        {isSidebarVisible ? "<" : ">"}
+        {isSidebarVisible ? <IoIosArrowBack /> : <IoIosArrowForward />}
       </button>
     </div>
   );

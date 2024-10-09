@@ -10,6 +10,7 @@ export default function GoogleAuth(type) {
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const user = userCredential.user;
+      // console.log(user);
       // Check if the user document already exists
       let userDocRef;
       if (type.type === "hotel") {
@@ -32,6 +33,7 @@ export default function GoogleAuth(type) {
       }
       console.log("with google");
     } catch (error) {
+      // console.log(error.message);
       setError(error.message);
     }
   };

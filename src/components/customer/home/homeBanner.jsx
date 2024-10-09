@@ -19,9 +19,9 @@ export default function HomeBanner() {
         </p>
         <a
           href="#AreaHotels"
-          className="p-2 border border-white rounded-full mt-6"
+          className="p-2 border border-white rounded-full mt-6 "
         >
-          <BsArrowDown className="text-2xl text-white" />
+          <BsArrowDown className="text-2xl text-white " />
         </a>
       </div>
     </div>

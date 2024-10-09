@@ -21,7 +21,7 @@ export default function Content({ active }) {
   };
 
   return (
-    <div className="text-xl text-white bg-gray-800 w-full min-h-screen p-6">
+    <div className="text-xl text-gray-800 w-full min-h-screen p-6">
       {renderContent()}
     </div>
   );

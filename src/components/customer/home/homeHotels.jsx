@@ -1,48 +1,7 @@
 import React from "react";
-import hotel_booking from "../../../Assets/hotel_booking.png";
+import hotels from "../../staticData";
 
 export default function HomeHotels() {
-  // Array of hotel data
-  const hotels = [
-    {
-      name: "The Royal Room",
-      available: "Yes",
-      price: 10000,
-      image: hotel_booking,
-    },
-    {
-      name: "The Deluxe Suite",
-      available: "No",
-      price: 15000,
-      image: hotel_booking,
-    },
-    {
-      name: "Ocean View Villa",
-      available: "Yes",
-      price: 20000,
-      image: hotel_booking,
-    },
-    {
-      name: "The Royal Room",
-      available: "Yes",
-      price: 10000,
-      image: hotel_booking,
-    },
-    {
-      name: "The Deluxe Suite",
-      available: "No",
-      price: 15000,
-      image: hotel_booking,
-    },
-    {
-      name: "Ocean View Villa",
-      available: "Yes",
-      price: 20000,
-      image: hotel_booking,
-    },
-    // Add more hotels as needed
-  ];
-
   return (
     <div className="w-full flex justify-center items-center ">
       <div

@@ -5,18 +5,17 @@ import { auth, db } from "../../../config/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
-  signOut,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import GoogleAuth from "../../authentication/googleAuth";
 import SideBanner from "../../authentication/sideBanner";
-import FormHeader from "../../authentication/formHeader";
-import ErrorMessage from "../../authentication/formError";
-import FormMessage from "../../authentication/formMessage";
-import InputField from "../../authentication/inputField";
-import FormFooter from "../../authentication/formFooter";
-import FormButton from "../../authentication/formButton";
-import FormRedirect from "../../authentication/formRedirect";
+import FormHeader from "../../authentication/formElements/formHeader";
+import ErrorMessage from "../../authentication/formElements/formError";
+import InputField from "../../authentication/formElements/inputField";
+import FormFooter from "../../authentication/formElements/formFooter";
+import FormButton from "../../authentication/formElements/formButton";
+import FormRedirect from "../../authentication/formElements/formRedirect";
+import FormMessage from "../../authentication/formElements/formMessage";
 
 export default function CustomerRegister() {
   const [error, setError] = useState("");
@@ -48,8 +47,8 @@ export default function CustomerRegister() {
         email: data.email,
         type: "customer",
       });
-      // console.log("email and password");
-      // navigate("/home");
+      console.log("email and password");
+      navigate("/");
     } catch (error) {
       setError(error.message);
     }
@@ -68,15 +67,6 @@ export default function CustomerRegister() {
       return () => clearInterval(interval);
     }
   }, [isVerifying]);
-
-  const logout = async () => {
-    try {
-      await signOut(auth);
-      console.log("sign out");
-    } catch (error) {
-      setError(error.message);
-    }
-  };
 
   return (
     <div className="flex min-h-screen">

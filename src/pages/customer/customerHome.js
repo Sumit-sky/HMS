@@ -8,7 +8,7 @@ export default function CustomerHome() {
   return (
     <div>
       <HomeNavbar />
-      <HomeBanner />
+      <HomeBanner heading={"Rooms and Suites"} />
       <HomeHotels />
       <HomeFooter/>
     </div>

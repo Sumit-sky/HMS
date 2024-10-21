@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ErrorMessage from "./formError";
 
 export default function FormFooter({ type, register, errors }) {
   return type === "signin" ? (
@@ -9,6 +8,7 @@ export default function FormFooter({ type, register, errors }) {
         <input
           type="checkbox"
           id="keepMeSignedIn"
+          {...register("rememberMe")}
           className="mr-2 h-4 w-4 accent-violet-500"
         />
         <label htmlFor="keepMeSignedIn" className="text-gray-700">

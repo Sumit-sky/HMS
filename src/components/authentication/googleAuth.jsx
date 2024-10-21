@@ -2,8 +2,10 @@ import React, { useState } from "react"; // Import useState to manage the error 
 import { auth, googleProvider, db } from "../../config/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
-export default function GoogleAuth(type) {
+export default function GoogleAuth({ type }) {
+  const navigate = useNavigate();
   const [error, setError] = useState(""); // Use useState to manage errors
 
   const googleSignUp = async () => {
@@ -13,7 +15,7 @@ export default function GoogleAuth(type) {
       // console.log(user);
       // Check if the user document already exists
       let userDocRef;
-      if (type.type === "hotel") {
+      if (type === "hotel") {
         userDocRef = doc(db, "hotels", user.uid);
       } else {
         userDocRef = doc(db, "customers", user.uid);
@@ -28,10 +30,13 @@ export default function GoogleAuth(type) {
             : "",
           email: user.email,
           photoURL: user.photoURL,
-          type: type.type,
+          type: type,
         });
       }
       console.log("with google");
+      if (type === "customer") {
+        navigate("/");
+      }
     } catch (error) {
       // console.log(error.message);
       setError(error.message);

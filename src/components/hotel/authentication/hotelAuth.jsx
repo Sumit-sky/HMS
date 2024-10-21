@@ -4,15 +4,13 @@ import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import GoogleAuth from "../../authentication/googleAuth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
-import logo from "../../../Assets/logo.png";
-import { Link } from "react-router-dom";
 import SideBanner from "../../authentication/sideBanner";
-import FormHeader from "../../authentication/formHeader";
-import ErrorMessage from "../../authentication/formError";
-import InputField from "../../authentication/inputField";
-import FormFooter from "../../authentication/formFooter";
-import FormButton from "../../authentication/formButton";
-import FormRedirect from "../../authentication/formRedirect";
+import FormHeader from "../../authentication/formElements/formHeader";
+import ErrorMessage from "../../authentication/formElements/formError";
+import InputField from "../../authentication/formElements/inputField";
+import FormFooter from "../../authentication/formElements/formFooter";
+import FormButton from "../../authentication/formElements/formButton";
+import FormRedirect from "../../authentication/formElements/formRedirect";
 
 export default function HotelAuth() {
   const [error, setError] = useState("");
@@ -50,10 +48,13 @@ export default function HotelAuth() {
 
   return (
     <div className="flex min-h-screen">
-      <SideBanner type={"hotel"} />
+      <SideBanner type={"hotelSignIn"} />
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-3">
         <div className="max-w-lg w-full">
-          <form className="flex flex-col items-center" onSubmit={handleSubmit(loginEmailAndPassword)}>
+          <form
+            className="flex flex-col items-center"
+            onSubmit={handleSubmit(loginEmailAndPassword)}
+          >
             <FormHeader heading={"Sign In"} />
             {error && <ErrorMessage message={error} />}
             <InputField

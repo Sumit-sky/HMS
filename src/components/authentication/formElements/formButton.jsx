@@ -1,12 +1,12 @@
 import React from "react";
 
-export default function FormButton({ buttonText, loading }) {
+export default function FormButton({ buttonText, loading, contactUs }) {
   return (
     <button
       type="submit"
-      className={`${
-        loading ? "cursor-not-allowed" : ""
-      } w-full bg-violet-500 text-white py-3 rounded-md`}
+      className={`${loading ? "cursor-not-allowed" : ""} w-full ${
+        contactUs ? "bg-[#7C6A46]" : "bg-violet-500"
+      } text-white py-3 rounded-md`}
       disabled={loading}
     >
       {loading ? (

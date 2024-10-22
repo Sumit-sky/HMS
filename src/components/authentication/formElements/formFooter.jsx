@@ -15,7 +15,7 @@ export default function FormFooter({ type, register, errors }) {
           Remember Me
         </label>
       </div>
-      <Link to={"#"} className={` text-violet-500 hover:underline`}>
+      <Link to={"/forgotPassword"} className={` text-violet-500 hover:underline`}>
         Forgot Password?
       </Link>
     </div>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-// import { useNavigate } from "react-router-dom";
-import { auth, db } from "../../../config/firebase";
+import { useNavigate } from "react-router-dom";
+import { auth, db, useUser } from "../../../config/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  onAuthStateChanged
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import GoogleAuth from "../../authentication/googleAuth";
 import SideBanner from "../../authentication/sideBanner";
 import FormHeader from "../../authentication/formElements/formHeader";
@@ -18,10 +19,38 @@ import FormRedirect from "../../authentication/formElements/formRedirect";
 import FormMessage from "../../authentication/formElements/formMessage";
 
 export default function HotelRegister() {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
   const [isVerifying, setVerifying] = useState(false);
-  // const navigate = useNavigate();
+  const [initializing, setInitializing] = useState(true);
+  const { isCustomer } = useUser();
+
+  useEffect(() => {
+    if (isCustomer) {
+      navigate("/", { replace: true });
+    }
+  }, [isCustomer, navigate]);
+
+  useEffect(() => {
+    // Check if user is already signed in
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Verify if the user is a customer
+        const userDocRef = doc(db, "customers", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists() && user.emailVerified) {
+          navigate("/");
+        }
+      }
+      setInitializing(false);
+    });
+
+    // Cleanup subscription
+    return () => unsubscribe();
+  }, [navigate, isVerifying]);
+
   const {
     register,
     handleSubmit,
@@ -59,10 +88,18 @@ export default function HotelRegister() {
             // navigate("/hotellogin");
           }
         });
-      }, 2000);
+      }, 500);
       return () => clearInterval(interval);
     }
   }, [isVerifying]);
+
+  if (initializing) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen">

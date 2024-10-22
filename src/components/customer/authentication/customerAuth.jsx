@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
-import GoogleAuth from "../../authentication/googleAuth";
+// Authentication
+import {
+  signInWithEmailAndPassword,
+  getAuth,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
+import GoogleAuth from "../../authentication/googleAuth";
+import { useUser } from "../../../config/firebase";
+// Components
 import SideBanner from "../../authentication/sideBanner";
 import FormHeader from "../../authentication/formElements/formHeader";
 import ErrorMessage from "../../authentication/formElements/formError";
@@ -17,12 +24,40 @@ export default function CustomerAuth() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState(true);
+  const { isHotel } = useUser();
+
+  useEffect(() => {
+    if (isHotel) {
+      navigate("/hotel/dashboard", { replace: true });
+    }
+  }, [isHotel, navigate]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    const auth = getAuth();
+    // Check if user is already signed in
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Verify if the user is a customer
+        const userDocRef = doc(db, "customers", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists() && user.emailVerified) {
+          navigate("/");
+        }
+      }
+      setInitializing(false);
+    });
+
+    // Cleanup subscription
+    return () => unsubscribe();
+  }, [navigate]);
 
   const loginEmailAndPassword = async (data) => {
     setLoading(true);
@@ -36,13 +71,9 @@ export default function CustomerAuth() {
       const user = userCredential.user;
       const userDocRef = doc(db, "customers", user.uid);
       const userDocSnap = await getDoc(userDocRef);
-      if (userDocSnap.exists()) {
-        if (!user.emailVerified) {
-          setError("Email not Verified, Please check your inbox");
-        } else {
-          navigate("/");
-          console.log("sign in success");
-        }
+
+      if (userDocSnap.exists() && !user.emailVerified) {
+        setError("Email not Verified, Please check your inbox");
       } else {
         setError("No customer record found.");
       }
@@ -57,6 +88,14 @@ export default function CustomerAuth() {
     }
     setLoading(false);
   };
+
+  if (initializing) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -100,7 +139,7 @@ export default function CustomerAuth() {
                 },
               }}
             />
-            <FormFooter type={"signin"} />
+            <FormFooter type={"signin"} register={register} />
             <FormButton buttonText={"Sign In"} loading={loading} />
             <FormRedirect type={"signin"} path={"/signup"} />
           </form>

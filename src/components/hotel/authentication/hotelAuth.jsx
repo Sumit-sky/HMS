@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import {
+  signInWithEmailAndPassword,
+  getAuth,
+  onAuthStateChanged,
+} from "firebase/auth";
 import GoogleAuth from "../../authentication/googleAuth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
@@ -11,15 +16,46 @@ import InputField from "../../authentication/formElements/inputField";
 import FormFooter from "../../authentication/formElements/formFooter";
 import FormButton from "../../authentication/formElements/formButton";
 import FormRedirect from "../../authentication/formElements/formRedirect";
+import { useUser } from "../../../config/firebase";
 
 export default function HotelAuth() {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState(true);
+  const { isCustomer } = useUser();
+  
+  useEffect(() => {
+    if (isCustomer) {
+      navigate("/", { replace: true });
+    }
+  }, [isCustomer, navigate]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    const auth = getAuth();
+    // Check if user is already signed in
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Verify if the user is a customer
+        const userDocRef = doc(db, "hotels", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists() && user.emailVerified) {
+          navigate("/hotel/dashboard");
+        }
+      }
+      setInitializing(false);
+    });
+
+    // Cleanup subscription
+    return () => unsubscribe();
+  }, [navigate]);
 
   const loginEmailAndPassword = async (data) => {
     setLoading(true);
@@ -33,18 +69,31 @@ export default function HotelAuth() {
       const user = userCredential.user;
       const userDocRef = doc(db, "hotels", user.uid);
       const userDocSnap = await getDoc(userDocRef);
-      if (userDocSnap.exists()) {
-        if (!user.emailVerified) {
-          setError("Email not Verified, Please check your inbox");
-        } else {
-          console.log("sign in success");
-        }
+
+      if (userDocSnap.exists() && !user.emailVerified) {
+        setError("Email not Verified, Please check your inbox");
+      } else {
+        setError("No hotel record found.");
       }
     } catch (error) {
-      setError(error.message);
+      if (error.code === "auth/wrong-password") {
+        setError("Incorrect password. Please try again.");
+      } else if (error.code === "auth/user-not-found") {
+        setError("No user found with this email. Please sign up.");
+      } else {
+        setError("Failed to sign in. Please try again.");
+      }
     }
     setLoading(false);
   };
+
+  if (initializing) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -85,7 +134,7 @@ export default function HotelAuth() {
                 },
               }}
             />
-            <FormFooter type={"signin"} />
+            <FormFooter type={"signin"} register={register} />
             <FormButton buttonText={"Sign In"} loading={loading} />
             <FormRedirect type={"signin"} path={"/hotel/signup"} />
           </form>

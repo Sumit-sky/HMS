@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { auth, db } from "../../../config/firebase";
+import { auth, db, useUser } from "../../../config/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  onAuthStateChanged,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import GoogleAuth from "../../authentication/googleAuth";
 import SideBanner from "../../authentication/sideBanner";
 import FormHeader from "../../authentication/formElements/formHeader";
@@ -18,16 +19,43 @@ import FormRedirect from "../../authentication/formElements/formRedirect";
 import FormMessage from "../../authentication/formElements/formMessage";
 
 export default function CustomerRegister() {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
   const [isVerifying, setVerifying] = useState(false);
+  const [initializing, setInitializing] = useState(true);
+  const { isHotel } = useUser();
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (isHotel) {
+      navigate("/", { replace: true });
+    }
+  }, [isHotel, navigate]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    // Check if user is already signed in
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Verify if the user is a customer
+        const userDocRef = doc(db, "customers", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists() && user.emailVerified) {
+          navigate("/");
+        }
+      }
+      setInitializing(false);
+    });
+
+    // Cleanup subscription
+    return () => unsubscribe();
+  }, [navigate, isVerifying]);
 
   const signUp = async (data) => {
     setVerifying(true);
@@ -47,8 +75,6 @@ export default function CustomerRegister() {
         email: data.email,
         type: "customer",
       });
-      console.log("email and password");
-      navigate("/");
     } catch (error) {
       setError(error.message);
     }
@@ -60,13 +86,21 @@ export default function CustomerRegister() {
         auth.currentUser.reload().then(() => {
           if (auth.currentUser.emailVerified) {
             setVerifying(false);
-            // navigate("/signin");
+            clearInterval(interval);
           }
         });
-      }, 2000);
+      }, 500);
       return () => clearInterval(interval);
     }
   }, [isVerifying]);
+
+  if (initializing) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen">

@@ -1,8 +1,10 @@
 import React from "react";
 import FooterLinkContainer from "./footerLinkContainer";
 import FooterFeedback from "./footerFeedback";
+import { useUser } from "../../../config/firebase";
 
 export default function HomeFooter() {
+  const { isCustomer } = useUser();
   return (
     <div className="bg-[#7C6A46] py-2">
       <div className="flex px-10 my-3 justify-between items-center text-white w-full">
@@ -11,13 +13,14 @@ export default function HomeFooter() {
             heading={"Quick Links"}
             links={[
               { title: "Register Hotel", path: "/hotel/signup" },
-              { title: "Room Booking", path: "#" },
-              { title: "Contact", path: "#" },
+              { title: "Hotel Login", path: "/hotel/signin" },
+              // { title: "Room Booking", path: "#" },
             ]}
           />
           <FooterLinkContainer
             heading={"Company"}
             links={[
+              { title: "Contact", path: "#" },
               { title: "Privacy Policy", path: "#" },
               { title: "About", path: "#" },
               { title: "FAQs", path: "#" },
@@ -33,7 +36,7 @@ export default function HomeFooter() {
             ]}
           />
         </div>
-        <FooterFeedback />
+        {isCustomer && <FooterFeedback />}
       </div>
       <hr className=" border-[#D9D9D9]" />
       <p className="text-white text-lg my-2">StayPedia</p>

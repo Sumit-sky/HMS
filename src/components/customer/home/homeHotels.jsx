@@ -11,7 +11,7 @@ export default function HomeHotels() {
         {hotels.map((hotel, index) => (
           <div
             key={index}
-            className="w-[390px] h-[414px] hover:shadow-[0_0_25px_-10px_rgba(0,0,0,0.3)]  hover:cursor-pointer m-4 rounded-lg transition-all ease-in-out duration-500"
+            className="w-[390px] h-[414px] hover:shadow-[0_0_25px_-10px_rgba(0,0,0,0.5)]  hover:cursor-pointer m-4 rounded-lg transition-all ease-in-out duration-500"
           >
             <img
               src={hotel.image}

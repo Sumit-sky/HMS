@@ -1,45 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import FormInput from "./formInput";
 import { useForm } from "react-hook-form";
 import FormButton from "../authentication/formElements/formButton";
 import ErrorMessage from "../authentication/formElements/formError";
-import { auth, db } from "../../config/firebase";
+import { db } from "../../config/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import FormMessage from "../authentication/formElements/formMessage";
+import { useUser } from "../../config/firebase";
 
 export default function ContactForm() {
+  const { userData, user } = useUser();
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    if (auth.currentUser) {
-      setUser(auth.currentUser);
-      setValue("name", auth.currentUser.displayName || "");
-      setValue("email", auth.currentUser.email || "");
-    }
-  }, [auth.currentUser]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
     reset,
   } = useForm({
     defaultValues: {
-      name: user?.displayName || "", // Set default values
-      email: user?.email || "",
+      name: userData?.firstName + " " + userData?.lastName || "",
+      email: userData?.email || "",
     },
   });
 
   const feedbackFormSubmit = async (data) => {
     setLoading(true);
-    // console.log(auth.currentUser.email);
     try {
-      const user = auth.currentUser;
       if (!user) {
         const docId = uuidv4();
         await setDoc(doc(db, "feedbacks", docId), {
@@ -59,7 +49,6 @@ export default function ContactForm() {
     } catch (error) {
       setError(error.message);
     }
-    console.log("Submitted");
     setLoading(false);
   };
 

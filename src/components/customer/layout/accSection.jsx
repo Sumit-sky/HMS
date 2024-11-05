@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa6";
 import { signOut } from "firebase/auth";
-import { auth } from "../../../config/firebase";
+import { auth, useUser } from "../../../config/firebase";
 
-export default function AccSection({ user, setUser }) {
-  const [isHovered, setIsHovered] = useState(false);
+export default function AccSection() {
   const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState(false);
+  const { user, userData, setUser, setUserType, setUserData } = useUser();
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -22,7 +23,10 @@ export default function AccSection({ user, setUser }) {
     try {
       await signOut(auth);
       console.log("sign out");
+      setIsHovered(false);
       setUser(null);
+      setUserType(null);
+      setUserData(null);
       navigate("/signin");
     } catch (error) {
       console.log(error.message);
@@ -40,8 +44,8 @@ export default function AccSection({ user, setUser }) {
       >
         {user?.photoURL?.trim() ? (
           <img
-            src={user.photoURL}
-            className="w-[40px] rounded-full"
+            src={userData.photoURL}
+            className="w-[40px] rounded-full h-[40px]"
             alt="profile"
           />
         ) : (

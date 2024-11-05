@@ -1,7 +1,8 @@
 // import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, onSnapshot, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -25,65 +26,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app, "gs://hotel-management-system-b9cfd.firebasestorage.app");
 export const googleProvider = new GoogleAuthProvider();
 
 const GlobalStateContext = createContext();
-
-export const GlobalStateProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [userType, setUserType] = useState(null);
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser);
-      setLoading(false);
-
-      if (firebaseUser) {
-        const customerDoc = await getDoc(doc(db, 'customers', firebaseUser.uid));
-        if (customerDoc.exists) {
-          setUserType('customer');
-          setUserData(customerDoc.data());
-        } else {
-          const hotelDoc = await getDoc(doc(db, 'hotels', firebaseUser.uid));
-          if (hotelDoc.exists) {
-            setUserType('hotel');
-            setUserData(hotelDoc.data());
-          } else {
-            // User not found in either collection
-            console.error('User not found in customers or managers collection');
-            setUserType(null);
-            setUserData(null);
-          }
-        }
-        setUser(firebaseUser);
-      } else {
-        // User is signed out
-        setUser(null);
-        setUserType(null);
-        setUserData(null);
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const value = {
-    user,
-    userType,
-    userData,
-    loading,
-    isCustomer: userType === "customer",
-    isHotel: userType === "hotel",
-  };
-
-  return (
-    <GlobalStateContext.Provider value={value}>
-      {!loading && children}
-    </GlobalStateContext.Provider>
-  )
-}
 
 export const useUser = () => {
   const context = useContext(GlobalStateContext);
@@ -92,3 +38,105 @@ export const useUser = () => {
   }
   return context;
 };
+
+export const GlobalStateProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [userType, setUserType] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const resetStates = () => {
+    setUser(null);
+    setUserType(null);
+    setUserData(null);
+    setError(null);
+  };
+
+  const fetchUserData = async (firebaseUser, collectionName) => {
+    try {
+      const docRef = doc(db, collectionName, firebaseUser.uid);
+      const docSnap = await getDoc(docRef);
+      return docSnap;
+    } catch (error) {
+      console.error(`Error fetching ${collectionName} data:`, error);
+      setError(error.message);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      try {
+        if (!firebaseUser || !firebaseUser.emailVerified) {
+          resetStates();
+          setLoading(false);
+          return;
+        }
+
+        // First check if the user is in hotels collection
+        const hotelDoc = await fetchUserData(firebaseUser, 'hotels');
+
+        if (hotelDoc?.exists()) {
+          setUser(firebaseUser);
+          setUserType('hotel');
+          setUserData(hotelDoc.data());
+          setLoading(false);
+          return;
+        }
+
+        // If not a hotel, check if user is in customers collection
+        const customerDoc = await fetchUserData(firebaseUser, 'customers');
+
+        if (customerDoc?.exists()) {
+          setUser(firebaseUser);
+          setUserType('customer');
+          setUserData(customerDoc.data());
+          setLoading(false);
+          return;
+        }
+
+        // If user is not found in either collection
+        console.warn('User not found in any collection:', firebaseUser.uid);
+        setUser(firebaseUser);
+        setUserType(null);
+        setUserData(null);
+        setError('User profile not found');
+
+      } catch (error) {
+        console.error('Error in auth state change:', error);
+        setError(error.message);
+        resetStates();
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const isHotel = userType === 'hotel';
+  const isCustomer = userType === 'customer';
+
+  const value = {
+    user,
+    userType,
+    userData,
+    loading,
+    error,
+    isCustomer,
+    isHotel,
+    setUser,
+    setUserType,
+    setUserData,
+  };
+
+  return (
+    <GlobalStateContext.Provider value={value}>
+      {/* {console.log(value)} */}
+      {!loading && children}
+    </GlobalStateContext.Provider>
+  )
+}

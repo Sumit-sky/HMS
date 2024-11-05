@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import {
   signInWithEmailAndPassword,
   getAuth,
-  onAuthStateChanged,
 } from "firebase/auth";
 import GoogleAuth from "../../authentication/googleAuth";
 import { doc, getDoc } from "firebase/firestore";
@@ -21,9 +20,9 @@ import { useUser } from "../../../config/firebase";
 export default function HotelAuth() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [initializing, setInitializing] = useState(true);
-  const { isCustomer } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+  // const [initializing, setInitializing] = useState(true);
+  const { loading, isCustomer, isHotel } = useUser();
   
   useEffect(() => {
     if (isCustomer) {
@@ -31,34 +30,40 @@ export default function HotelAuth() {
     }
   }, [isCustomer, navigate]);
 
+  useEffect(() => {
+    if (isHotel) {
+      navigate("/hotel/dashboard", { replace: true });
+    }
+  }, [isHotel, navigate]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
-    const auth = getAuth();
-    // Check if user is already signed in
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // Verify if the user is a customer
-        const userDocRef = doc(db, "hotels", user.uid);
-        const userDocSnap = await getDoc(userDocRef);
+  // useEffect(() => {
+  //   const auth = getAuth();
+  //   // Check if user is already signed in
+  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  //     if (user) {
+  //       // Verify if the user is a customer
+  //       const userDocRef = doc(db, "hotels", user.uid);
+  //       const userDocSnap = await getDoc(userDocRef);
 
-        if (userDocSnap.exists() && user.emailVerified) {
-          navigate("/hotel/dashboard");
-        }
-      }
-      setInitializing(false);
-    });
+  //       if (userDocSnap.exists() && user.emailVerified) {
+  //         navigate("/hotel/dashboard");
+  //       }
+  //     }
+  //     setInitializing(false);
+  //   });
 
-    // Cleanup subscription
-    return () => unsubscribe();
-  }, [navigate]);
+  //   // Cleanup subscription
+  //   return () => unsubscribe();
+  // }, [navigate]);
 
   const loginEmailAndPassword = async (data) => {
-    setLoading(true);
+    setIsLoading(true);
     const auth = getAuth();
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -84,10 +89,10 @@ export default function HotelAuth() {
         setError("Failed to sign in. Please try again.");
       }
     }
-    setLoading(false);
+    setIsLoading(false);
   };
 
-  if (initializing) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
@@ -135,7 +140,7 @@ export default function HotelAuth() {
               }}
             />
             <FormFooter type={"signin"} register={register} />
-            <FormButton buttonText={"Sign In"} loading={loading} />
+            <FormButton buttonText={"Sign In"} loading={isLoading} />
             <FormRedirect type={"signin"} path={"/hotel/signup"} />
           </form>
           <GoogleAuth type={"hotel"} />

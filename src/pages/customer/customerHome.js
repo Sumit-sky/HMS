@@ -6,11 +6,11 @@ import HomeFooter from '../../components/customer/layout/homeFooter'
 
 export default function CustomerHome() {
   return (
-    <div>
+    <>
       <HomeNavbar />
       <HomeBanner heading={"Rooms and Suites"} />
       <HomeHotels />
-      <HomeFooter/>
-    </div>
+      <HomeFooter />
+    </>
   )
 }

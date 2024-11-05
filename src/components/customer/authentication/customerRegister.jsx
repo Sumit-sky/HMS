@@ -58,7 +58,6 @@ export default function CustomerRegister() {
   }, [navigate, isVerifying]);
 
   const signUp = async (data) => {
-    setVerifying(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -67,6 +66,7 @@ export default function CustomerRegister() {
       );
 
       await sendEmailVerification(userCredential.user);
+      setVerifying(true);
       setMsg("A verification email has been sent. Please check your inbox.");
 
       await setDoc(doc(db, "customers", userCredential.user.uid), {

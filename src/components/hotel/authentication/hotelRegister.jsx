@@ -5,7 +5,7 @@ import { auth, db, useUser } from "../../../config/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import GoogleAuth from "../../authentication/googleAuth";
@@ -23,8 +23,7 @@ export default function HotelRegister() {
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
   const [isVerifying, setVerifying] = useState(false);
-  const [initializing, setInitializing] = useState(true);
-  const { isCustomer } = useUser();
+  const { loading, isHotel, isCustomer } = useUser();
 
   useEffect(() => {
     if (isCustomer) {
@@ -33,23 +32,10 @@ export default function HotelRegister() {
   }, [isCustomer, navigate]);
 
   useEffect(() => {
-    // Check if user is already signed in
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // Verify if the user is a customer
-        const userDocRef = doc(db, "customers", user.uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists() && user.emailVerified) {
-          navigate("/");
-        }
-      }
-      setInitializing(false);
-    });
-
-    // Cleanup subscription
-    return () => unsubscribe();
-  }, [navigate, isVerifying]);
+    if (isHotel) {
+      navigate("/hotel/dashboard", { replace: true });
+    }
+  }, [isHotel, navigate]);
 
   const {
     register,
@@ -93,7 +79,7 @@ export default function HotelRegister() {
     }
   }, [isVerifying]);
 
-  if (initializing) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>

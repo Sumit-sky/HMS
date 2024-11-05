@@ -17,7 +17,7 @@ export default function GoogleAuth({ type }) {
       let userDocRef;
       if (type === "hotel") {
         userDocRef = doc(db, "hotels", user.uid);
-      } else {
+      } else if (type === "customer") {
         userDocRef = doc(db, "customers", user.uid);
       }
       const userDocSnap = await getDoc(userDocRef);
@@ -33,9 +33,11 @@ export default function GoogleAuth({ type }) {
           type: type,
         });
       }
-      console.log("with google");
+      // console.log("with google");
       if (type === "customer") {
         navigate("/");
+      } else if (type === "hotel") {
+        navigate("/hotel/dashboard");
       }
     } catch (error) {
       // console.log(error.message);

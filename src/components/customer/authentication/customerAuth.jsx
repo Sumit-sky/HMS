@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 // Authentication
-import {
-  signInWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../../config/firebase";
+import { db, auth } from "../../../config/firebase";
 import GoogleAuth from "../../authentication/googleAuth";
 import { useUser } from "../../../config/firebase";
 // Components
@@ -22,16 +19,27 @@ import FormRedirect from "../../authentication/formElements/formRedirect";
 
 export default function CustomerAuth() {
   const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [initializing, setInitializing] = useState(true);
-  const { isHotel } = useUser();
+  const [error, setError] = useState(null);
+  const [msg, setMsg] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { loading, isCustomer, isHotel } = useUser();
 
   useEffect(() => {
+    toast.error(error);
+  }, [error]);
+
+  useEffect(() => {
+    if (isCustomer) {
+      setMsg("Sign-in successful!");
+      toast.success(msg);
+      navigate("/", { replace: true });
+      return;
+    }
     if (isHotel) {
       navigate("/hotel/dashboard", { replace: true });
+      return;
     }
-  }, [isHotel, navigate]);
+  }, [msg, isHotel, isCustomer, navigate]);
 
   const {
     register,
@@ -39,29 +47,8 @@ export default function CustomerAuth() {
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
-    const auth = getAuth();
-    // Check if user is already signed in
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // Verify if the user is a customer
-        const userDocRef = doc(db, "customers", user.uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists() && user.emailVerified) {
-          navigate("/");
-        }
-      }
-      setInitializing(false);
-    });
-
-    // Cleanup subscription
-    return () => unsubscribe();
-  }, [navigate]);
-
   const loginEmailAndPassword = async (data) => {
-    setLoading(true);
-    const auth = getAuth();
+    setIsLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -74,8 +61,6 @@ export default function CustomerAuth() {
 
       if (userDocSnap.exists() && !user.emailVerified) {
         setError("Email not Verified, Please check your inbox");
-      } else {
-        setError("No customer record found.");
       }
     } catch (error) {
       if (error.code === "auth/wrong-password") {
@@ -86,10 +71,10 @@ export default function CustomerAuth() {
         setError("Failed to sign in. Please try again.");
       }
     }
-    setLoading(false);
+    setIsLoading(false);
   };
 
-  if (initializing) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
@@ -140,7 +125,7 @@ export default function CustomerAuth() {
               }}
             />
             <FormFooter type={"signin"} register={register} />
-            <FormButton buttonText={"Sign In"} loading={loading} />
+            <FormButton buttonText={"Sign In"} loading={isLoading} />
             <FormRedirect type={"signin"} path={"/signup"} />
           </form>
           <GoogleAuth type={"customer"} />

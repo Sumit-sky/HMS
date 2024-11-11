@@ -24,6 +24,7 @@ export default function CustomerRegister() {
   const [msg, setMsg] = useState("");
   const [isVerifying, setVerifying] = useState(false);
   const [initializing, setInitializing] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { isHotel } = useUser();
 
   useEffect(() => {
@@ -39,10 +40,8 @@ export default function CustomerRegister() {
   } = useForm();
 
   useEffect(() => {
-    // Check if user is already signed in
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Verify if the user is a customer
         const userDocRef = doc(db, "customers", user.uid);
         const userDocSnap = await getDoc(userDocRef);
 
@@ -53,11 +52,11 @@ export default function CustomerRegister() {
       setInitializing(false);
     });
 
-    // Cleanup subscription
     return () => unsubscribe();
-  }, [navigate, isVerifying]);
+  }, [navigate]);
 
   const signUp = async (data) => {
+    setIsLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -76,23 +75,31 @@ export default function CustomerRegister() {
         type: "customer",
       });
     } catch (error) {
-      setError(error.message);
+      setError(error.message || "Failed to create account. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     if (isVerifying) {
-      const interval = setInterval(() => {
-        auth.currentUser.reload().then(() => {
+      const interval = setInterval(async () => {
+        if (auth.currentUser) {
+          await auth.currentUser.reload();
           if (auth.currentUser.emailVerified) {
             setVerifying(false);
+            setIsLoading(false);
             clearInterval(interval);
+            navigate("/");
           }
-        });
+        } else {
+          clearInterval(interval); // Clear interval if user is null
+        }
       }, 500);
+
       return () => clearInterval(interval);
     }
-  }, [isVerifying]);
+  }, [isVerifying, navigate]);
 
   if (initializing) {
     return (
@@ -166,10 +173,7 @@ export default function CustomerRegister() {
               }}
             />
             <FormFooter type={"signup"} register={register} errors={errors} />
-            <FormButton
-              buttonText={"Create an Account"}
-              loading={isVerifying}
-            />
+            <FormButton buttonText={"Create an Account"} loading={isLoading} />
             <FormRedirect type={"signup"} path={"/signin"} />
           </form>
           <GoogleAuth type={"customer"} />

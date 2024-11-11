@@ -14,9 +14,9 @@ export default function AccSection() {
   };
 
   const handleMouseLeave = () => {
-    setTimeout(() => {
-      setIsHovered(false);
-    }, 2000);
+    setIsHovered(false);
+    // setTimeout(() => {
+    // }, 3000);
   };
 
   const logout = async () => {
@@ -40,9 +40,9 @@ export default function AccSection() {
           user ? "block" : "hidden"
         }`}
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        // onMouseLeave={handleMouseLeave}
       >
-        {user?.photoURL?.trim() ? (
+        {userData?.photoURL?.trim() ? (
           <img
             src={userData.photoURL}
             className="w-[40px] rounded-full h-[40px]"

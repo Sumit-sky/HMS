@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import {
-  signInWithEmailAndPassword,
-  getAuth,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import GoogleAuth from "../../authentication/googleAuth";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../../config/firebase";
 import SideBanner from "../../authentication/sideBanner";
 import FormHeader from "../../authentication/formElements/formHeader";
 import ErrorMessage from "../../authentication/formElements/formError";
@@ -21,20 +16,20 @@ export default function HotelAuth() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  // const [initializing, setInitializing] = useState(true);
-  const { loading, isCustomer, isHotel } = useUser();
-  
+  const { loading, isCustomer, isHotel, userData } = useUser();
+
+  // Redirect user based on their role/status after authentication
   useEffect(() => {
     if (isCustomer) {
       navigate("/", { replace: true });
+    } else if (isHotel) {
+      const hotelDestination =
+        userData?.photos?.length > 0
+          ? "/hotel/dashboard"
+          : "/hotel/hotel-details";
+      navigate(hotelDestination, { replace: true });
     }
-  }, [isCustomer, navigate]);
-
-  useEffect(() => {
-    if (isHotel) {
-      navigate("/hotel/dashboard", { replace: true });
-    }
-  }, [isHotel, navigate]);
+  }, [isCustomer, isHotel, userData, navigate]);
 
   const {
     register,
@@ -42,29 +37,11 @@ export default function HotelAuth() {
     formState: { errors },
   } = useForm();
 
-  // useEffect(() => {
-  //   const auth = getAuth();
-  //   // Check if user is already signed in
-  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
-  //     if (user) {
-  //       // Verify if the user is a customer
-  //       const userDocRef = doc(db, "hotels", user.uid);
-  //       const userDocSnap = await getDoc(userDocRef);
-
-  //       if (userDocSnap.exists() && user.emailVerified) {
-  //         navigate("/hotel/dashboard");
-  //       }
-  //     }
-  //     setInitializing(false);
-  //   });
-
-  //   // Cleanup subscription
-  //   return () => unsubscribe();
-  // }, [navigate]);
-
   const loginEmailAndPassword = async (data) => {
     setIsLoading(true);
+    setError(""); // Reset error state on new login attempt
     const auth = getAuth();
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -72,26 +49,32 @@ export default function HotelAuth() {
         data.password
       );
       const user = userCredential.user;
-      const userDocRef = doc(db, "hotels", user.uid);
-      const userDocSnap = await getDoc(userDocRef);
 
-      if (userDocSnap.exists() && !user.emailVerified) {
-        setError("Email not Verified, Please check your inbox");
-      } else {
-        setError("No hotel record found.");
+      if (!user.emailVerified) {
+        setError("Email not verified. Please check your inbox.");
       }
     } catch (error) {
-      if (error.code === "auth/wrong-password") {
-        setError("Incorrect password. Please try again.");
-      } else if (error.code === "auth/user-not-found") {
-        setError("No user found with this email. Please sign up.");
-      } else {
-        setError("Failed to sign in. Please try again.");
-      }
+      handleLoginError(error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
+  const handleLoginError = (error) => {
+    switch (error.code) {
+      case "auth/wrong-password":
+        setError("Incorrect password. Please try again.");
+        break;
+      case "auth/user-not-found":
+        setError("No user found with this email. Please sign up.");
+        break;
+      default:
+        setError("Failed to sign in. Please try again.");
+        break;
+    }
+  };
+
+  // Loading indicator while user data is being fetched
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">

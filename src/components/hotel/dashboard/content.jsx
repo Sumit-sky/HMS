@@ -1,10 +1,11 @@
 import React from "react";
+import DashboardComp from "./dashboardComponents/dashboardComp";
 
 export default function Content({ active }) {
   const renderContent = () => {
     switch (active) {
       case 0:
-        return <div>Welcome to the Dashboard</div>;
+        return <DashboardComp />;
       case 1:
         return <div>Front Desk Operations</div>;
       case 2:

@@ -16,6 +16,7 @@ import CustomerLogin from '../pages/customer/customerLogin';
 import CustomerHome from '../pages/customer/customerHome';
 import CustomerProfile from '../pages/customer/customerProfile';
 import ContactUs from '../pages/customer/contactUs';
+import CustomerExplore from '../pages/customer/customerExplore';
 // Common
 import ForgotPasswordPage from '../pages/forgotPassword/forgotPasswordPage';
 import ResetPass from '../pages/forgotPassword/resetPass';
@@ -27,10 +28,12 @@ export default function Router() {
       <Routes>
         {/* Customer Pages */}
         <Route path='/' element={<HotelRoutes><CustomerHome /></HotelRoutes>}></Route>
+        <Route path='/explore' element={<HotelRoutes><CustomerExplore /></HotelRoutes>}></Route>
         <Route path='/signin' element={<CustomerLogin />}></Route>
         <Route path='/signup' element={<CustomerSignUp />}></Route>
         <Route path='/profile' element={<ProtectedRoutes><CustomerProfile /></ProtectedRoutes>}></Route>
         <Route path='/contact' element={<HotelRoutes><ContactUs /></HotelRoutes>}></Route>
+        {/* Check later for changes */}
 
         {/* Hotel Pages */}
         <Route path='/hotel/home' element={<CustomerRoutes><HotelHome /></CustomerRoutes>}></Route>

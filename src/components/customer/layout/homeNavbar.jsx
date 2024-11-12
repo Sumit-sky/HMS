@@ -15,9 +15,10 @@ export default function HomeNavbar() {
       </Link>
       <div className="hidden md:flex flex-grow justify-center space-x-10">
         <NavbarLink text={"Home"} path={"/"} />
-        <NavbarLink text={"Explore"} path={"#"} />
+        <NavbarLink text={"Explore"} path={"/explore"} />
         <NavbarLink text={"About"} path={"#"} />
         <NavbarLink text={"Contact"} path={"/contact"} />
+        {/* {!user ? <NavbarLink text={"Hotels"} path={"/hotel/signup"} /> : <></>} */}
       </div>
       <div className="hidden md:flex space-x-3">
         {/* <Link

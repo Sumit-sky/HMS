@@ -22,7 +22,7 @@ export default function ContactForm() {
     reset,
   } = useForm({
     defaultValues: {
-      name: userData?.firstName + " " + userData?.lastName || "",
+      name: userData?.firstName || userData?.hotelName || "",
       email: userData?.email || "",
     },
   });

@@ -12,7 +12,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDzXZ7wA4Q43uSMQPsEpPg2gA7kVzWbdWE",
+  apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
   authDomain: "hotel-management-system-b9cfd.firebaseapp.com",
   projectId: "hotel-management-system-b9cfd",
   storageBucket: "hotel-management-system-b9cfd.appspot.com",

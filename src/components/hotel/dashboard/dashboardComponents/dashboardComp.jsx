@@ -3,12 +3,12 @@ import DashboardDisplayDate from "./dashboardDisplayDate";
 import DashboardOverview from "./dashboardOverview";
 import DashboardRooms from "./dashboardRooms";
 
-export default function DashboardComp() {
+export default function DashboardComp({ userData }) {
   return (
     <>
       <DashboardDisplayDate />
-      <DashboardOverview />
-      <DashboardRooms />
+      <DashboardOverview userData={userData} />
+      <DashboardRooms userData={userData} />
     </>
   );
 }

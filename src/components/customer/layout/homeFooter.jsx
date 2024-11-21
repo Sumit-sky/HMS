@@ -6,7 +6,7 @@ import { useUser } from "../../../config/firebase";
 export default function HomeFooter() {
   const { isCustomer } = useUser();
   return (
-    <div className="bg-[#7C6A46] py-2">
+    <div className="bg-[#7C6A46] py-2 w-full">
       <div className="flex px-10 my-3 justify-between items-center text-white w-full">
         <div className="flex w-1/2 justify-evenly text-left">
           <FooterLinkContainer

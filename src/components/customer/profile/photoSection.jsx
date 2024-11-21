@@ -5,7 +5,7 @@ import { db, storage } from "../../../config/firebase";
 import { updateDoc, doc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-export default function PhotoSection() {
+export default function PhotoSection({ activeSection, setActiveSection }) {
   const { userData, user } = useUser();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -47,7 +47,7 @@ export default function PhotoSection() {
 
   return (
     <div className="w-max h-max flex flex-col relative">
-      <div className="relative w-auto h-auto">
+      <div className="w-full flex justify-center h-auto">
         {photoURL ? (
           <img
             src={photoURL}
@@ -99,6 +99,24 @@ export default function PhotoSection() {
         {userData.firstName + " " + userData.lastName}
       </p>
       {error && <p className="text-red-500">{error}</p>}
+      <div className="text-lg my-4 text-left w-full">
+        <button
+          className={`w-full p-2 rounded-lg  ${
+            activeSection === 1 ? "bg-[#7C6A46] text-white" : ""
+          }`}
+          onClick={() => setActiveSection(1)}
+        >
+          My Profile
+        </button>
+        <button
+          className={`w-full p-2 rounded-lg  ${
+            activeSection === 2 ? "bg-[#7C6A46] text-white" : ""
+          }`}
+          onClick={() => setActiveSection(2)}
+        >
+          Booking History
+        </button>
+      </div>
     </div>
   );
 }

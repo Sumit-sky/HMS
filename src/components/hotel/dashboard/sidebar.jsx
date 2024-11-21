@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import SidebarButton from "./sideBarButton";
 import IconDashboard from "../../../Assets/hotel_svgs/iconDashboard";
-import IconFrontDesk from "../../../Assets/hotel_svgs/iconFrontDesk";
-import IconDeals from "../../../Assets/hotel_svgs/iconDeals";
+// import IconFrontDesk from "../../../Assets/hotel_svgs/iconFrontDesk";
+// import IconDeals from "../../../Assets/hotel_svgs/iconDeals";
 import IconGuest from "../../../Assets/hotel_svgs/iconGuest";
 import IconRate from "../../../Assets/hotel_svgs/iconRate";
 import IconRooms from "../../../Assets/hotel_svgs/iconRooms";
@@ -26,36 +26,36 @@ export default function HotelSidebar({ active, setActive }) {
             icon={IconDashboard}
             label="Dashboard"
           />
-          <SidebarButton
+          {/* <SidebarButton
             index={1}
             active={active}
             setActive={setActive}
             icon={IconFrontDesk}
             label="Front Desk"
-          />
+          /> */}
           <SidebarButton
-            index={2}
+            index={1}
             active={active}
             setActive={setActive}
             icon={IconGuest}
             label="Guest"
           />
           <SidebarButton
-            index={3}
+            index={2}
             active={active}
             setActive={setActive}
             icon={IconRooms}
             label="Rooms"
           />
-          <SidebarButton
+          {/* <SidebarButton
             index={4}
             active={active}
             setActive={setActive}
             icon={IconDeals}
             label="Deals"
-          />
+          /> */}
           <SidebarButton
-            index={5}
+            index={3}
             active={active}
             setActive={setActive}
             icon={IconRate}

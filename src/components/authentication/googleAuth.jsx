@@ -31,6 +31,7 @@ export default function GoogleAuth({ type }) {
           email: user.email,
           photoURL: user.photoURL,
           type: type,
+          
         });
       }
       // console.log("with google");

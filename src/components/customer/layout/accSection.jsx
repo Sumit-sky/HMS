@@ -22,7 +22,7 @@ export default function AccSection() {
   const logout = async () => {
     try {
       await signOut(auth);
-      console.log("sign out");
+      // console.log("sign out");
       setIsHovered(false);
       setUser(null);
       setUserType(null);

@@ -73,6 +73,7 @@ export default function CustomerRegister() {
         lastName: data.lastName,
         email: data.email,
         type: "customer",
+        bookingHistory: [],
       });
     } catch (error) {
       setError(error.message || "Failed to create account. Please try again.");

@@ -4,6 +4,7 @@ import App from './App';
 import { GlobalStateProvider } from './config/firebase';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

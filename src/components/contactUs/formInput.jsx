@@ -15,7 +15,7 @@ export default function FormInput({
     <div
       className={`${
         display ? "hidden" : ""
-      } w-[48%] mb-3 flex flex-col items-start justify-center`}
+      } w-full mb-3 flex flex-col items-start justify-center`}
     >
       <label htmlFor="" className="my-1">
         {label}

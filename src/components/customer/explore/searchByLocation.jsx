@@ -7,7 +7,7 @@ export default function SearchByLocation() {
   // console.log(savedPinCode);
   const [pinCode, setPinCode] = useState(savedPinCode);
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDJXx8997gVIbOINrq5TXzaBNBaydmEeJs",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_APIKEY,
     libraries,
   });
 

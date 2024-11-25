@@ -53,18 +53,19 @@ export default function BookingHistory() {
           {bookings.map((booking) => (
             <div
               key={booking.id}
-              className="w-full rounded-md p-3 bg-gray-50 flex justify-between shadow-md"
+              className="w-full mb-2 rounded-md p-3 bg-gray-50 flex justify-between shadow-md hover:shadow-2xl transition-all ease-in-out duration-100"
             >
               <div className="w-full flex flex-col text-gray-700">
                 <p className="text-[#7C6A46] text-2xl font-semibold">
                   {booking.hotelName}
                 </p>
                 <div className="flex w-full justify-evenly p-3">
+                  <p>Rooms Booked: {booking.rooms}</p>
                   <p>
-                    Check-in: {booking.startDate}, {booking.checkInTime} PM
+                    Check-in: {new Date(booking.startDate).toLocaleDateString()}, {booking.checkInTime} PM
                   </p>
                   <p>
-                    Check-out: {booking.endDate}, {booking.checkOutTime} AM
+                    Check-out: {new Date(booking.endDate).toLocaleDateString()}, {booking.checkOutTime} AM
                   </p>
                 </div>
 

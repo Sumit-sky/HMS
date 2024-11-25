@@ -71,6 +71,7 @@ export default function PersonalInfo() {
       <h1 className="text-xl w-full text-left mb-3">Personal Information</h1>
       <div className="flex flex-wrap justify-between">
         <FormInput
+          width={"w-[48%]"}
           label={"First Name"}
           register={register}
           name={"firstName"}
@@ -84,6 +85,7 @@ export default function PersonalInfo() {
         />
         <FormInput
           label={"Last Name"}
+          width={"w-[48%]"}
           register={register}
           name={"lastName"}
           placeholder={"Last Name"}
@@ -96,6 +98,7 @@ export default function PersonalInfo() {
         />
         <FormInput
           label={"Date Of Birth"}
+          width={"w-[48%]"}
           register={register}
           name={"dob"}
           placeholder={"Date of Birth"}
@@ -108,6 +111,7 @@ export default function PersonalInfo() {
         />
         <FormInput
           label={"Mobile"}
+          width={"w-[48%]"}
           register={register}
           name={"mobile"}
           placeholder={"Mobile"}

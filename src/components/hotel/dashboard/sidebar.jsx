@@ -18,7 +18,7 @@ export default function HotelSidebar({ active, setActive }) {
   return (
     <div className="flex">
       {isSidebarVisible && (
-        <div className="flex flex-col min-h-screen w-64 p-2 shadow-lg text-white">
+        <div className="flex flex-col h-[88vh] w-64 p-2 shadow-lg text-white">
           <SidebarButton
             index={0}
             active={active}
@@ -38,14 +38,14 @@ export default function HotelSidebar({ active, setActive }) {
             active={active}
             setActive={setActive}
             icon={IconGuest}
-            label="Guest"
+            label="Bookings"
           />
           <SidebarButton
             index={2}
             active={active}
             setActive={setActive}
             icon={IconRooms}
-            label="Rooms"
+            label="Guests"
           />
           {/* <SidebarButton
             index={4}
@@ -59,7 +59,7 @@ export default function HotelSidebar({ active, setActive }) {
             active={active}
             setActive={setActive}
             icon={IconRate}
-            label="Rate"
+            label="Rooms"
           />
         </div>
       )}

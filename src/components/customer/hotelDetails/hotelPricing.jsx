@@ -33,8 +33,8 @@ export default function HotelPricing({ hotel }) {
   });
 
   const bookRoom = async (data) => {
-    if (data.startDate === data.endDate) {
-      toast.error("Dates cannot be same");
+    if (data.startDate >= data.endDate) {
+      toast.error("Invalid Duration");
       return;
     }
     if (!isCustomer) {
@@ -54,7 +54,7 @@ export default function HotelPricing({ hotel }) {
       const docId = uuidv4();
       await setDoc(doc(db, "bookings", docId), {
         ...data,
-        bookingDate: new Date().getDate(),
+        bookingDate: new Date().toLocaleDateString(),
         userId: user.uid,
         userName: userData.firstName + " " + userData.lastName,
         userContact: userData.phoneNumber,
@@ -67,6 +67,8 @@ export default function HotelPricing({ hotel }) {
         hotelContact: hotel.mobileNumber,
         hotelAddress: hotel.address + ", " + hotel.city + ", " + hotel.pinCode,
         hotelEmail: hotel.email,
+        status: "booked",
+        price: data.rooms * hotel.bookingPrice,
       });
 
       await updateDoc(doc(db, "customers", user.uid), {
@@ -74,7 +76,7 @@ export default function HotelPricing({ hotel }) {
       });
       await updateDoc(doc(db, "hotels", hotel.id), {
         bookings: arrayUnion(docId),
-        freeRooms: hotel.freeRooms - data.rooms,
+        // freeRooms: hotel.freeRooms - data.rooms, do this when check in
       });
       toast.success("Hotel booked successfully!");
       reset();

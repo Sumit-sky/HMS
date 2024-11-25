@@ -102,6 +102,14 @@ export default function Profile() {
         value: !!data[amenity.name],
       }));
       // console.log(amenitiesArray);
+      // const roomsArray = Array.from(
+      //   { length: data.numberOfRooms },
+      //   (_, index) => ({
+      //     [index]: ["free", "clean"],
+      //   })
+      // ).reduce((acc, room) => ({ ...acc, ...room }), {});
+
+      // console.log(roomsArray);
       // Uploading images and getting there download urls
       const uploadPromises = selectedFiles.map(async ({ file }) => {
         const uniqueRef = ref(storage, `hotelPhotos/${user.uid}/${file.name}`);
@@ -129,6 +137,7 @@ export default function Profile() {
         roomSize: data.roomSize,
         maxPersons: data.maxPersons,
         bookingPrice: data.bookingPrice,
+        // roomsArray: roomsArray,
       });
       toast.success("Profile saved successfully!");
       setActivePage(0);

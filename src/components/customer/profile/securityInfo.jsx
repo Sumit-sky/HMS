@@ -114,6 +114,7 @@ export default function SecurityInfo() {
       >
         <div className="flex flex-wrap justify-between">
           <FormInput
+            width={"w-[48%]"}
             label={"Email"}
             register={register}
             name={"email"}

@@ -74,17 +74,21 @@ export default function AddHotelInfo() {
         key: amenity.name,
         value: !!data[amenity.name],
       }));
-      // console.log(amenitiesArray);
-      // Uploading images and getting there download urls
       const uploadPromises = selectedFiles.map(async ({ file }) => {
         const uniqueRef = ref(storage, `hotelPhotos/${user.uid}/${file.name}`);
         await uploadBytes(uniqueRef, file);
-        // Get download URL after uploading
         const url = await getDownloadURL(uniqueRef);
         photoURLs.push(url);
       });
+
       await Promise.all(uploadPromises);
-      // updating the hotels table
+      const roomsArray = Array.from(
+        { length: data.numberOfRooms },
+        (_, index) => ({
+          [index]: ["free", "clean"],
+        })
+      ).reduce((acc, room) => ({ ...acc, ...room }), {});
+
       await updateDoc(doc(db, "hotels", user.uid), {
         photos: photoURLs,
         amenitiesArray: amenitiesArray,
@@ -103,6 +107,7 @@ export default function AddHotelInfo() {
         roomSize: data.roomSize,
         maxPersons: data.maxPersons,
         bookingPrice: data.bookingPrice,
+        roomsArray: roomsArray,
       });
       toast.success("Profile saved successfully!");
       navigate("/hotel/profile");

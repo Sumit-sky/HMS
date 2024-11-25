@@ -23,7 +23,7 @@ export default function HotelDashboard() {
   return (
     <>
       <HotelNavbar />
-      <div className="flex">
+      <div className="flex w-full">
         <HotelSidebar active={active} setActive={setActive} />
         <Content active={active} />
       </div>

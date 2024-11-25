@@ -48,6 +48,7 @@ export default function Guests({ bookings }) {
       await updateDoc(doc(db, "bookings", booking.id), {
         status: status,
         assignedRooms: [],
+        endDate: today.toLocaleDateString(),
       });
 
       await updateDoc(doc(db, "hotels", user.uid), {
@@ -94,7 +95,7 @@ export default function Guests({ bookings }) {
                 "Check In Date",
                 "Check Out Date",
                 "Room No",
-                "Booking Date",
+                // "Booking Date",
                 "Amount Paid",
                 "Actions/Status",
               ]}
@@ -113,7 +114,7 @@ export default function Guests({ bookings }) {
                   <td className="py-2 px-4 text-left">
                     {booking.assignedRooms.join(",")}
                   </td>
-                  <td className="py-2 px-4 text-left">{booking.bookingDate}</td>
+                  {/* <td className="py-2 px-4 text-left">{booking.bookingDate}</td> */}
                   <td className="py-2 px-4 text-left">₹ {booking.price}</td>
                   <td className="py-2 px-4 text-left flex justify-between">
                     {booking.status === "checkedIn" && (

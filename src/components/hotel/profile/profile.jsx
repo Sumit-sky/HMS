@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useUser } from "../../../config/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { toast } from "react-toastify";
 import { db, storage } from "../../../config/firebase";
-import { updateDoc, doc } from "firebase/firestore";
+import { updateDoc, getDoc, doc } from "firebase/firestore";
 import { amenitiesList } from "../../staticData";
 import AddBasicDetails from "../addDetails/addBasicDetails";
 import AddHotelDetails from "../addDetails/addHotelDetails";
@@ -54,6 +54,30 @@ export default function Profile() {
       // also set selected files to photo urls
     },
   });
+
+  useEffect(() => {
+    const fetchStoredImages = async () => {
+      try {
+        const docRef = doc(db, "hotels", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const photoURLs = docSnap.data().photos || [];
+          const files = photoURLs.map((url, index) => ({
+            file: { name: `stored-image-${index}` }, // Mock file object for display
+            url, // URL for displaying the image
+          }));
+          setSelectedFiles(files);
+        }
+      } catch (error) {
+        console.error("Error fetching stored images:", error);
+        toast.error("Failed to load stored images.");
+      }
+    };
+
+    fetchStoredImages();
+  }, [user.uid]);
+
   const renderContent = () => {
     switch (activePage) {
       case 0:
@@ -67,7 +91,9 @@ export default function Profile() {
           />
         );
       case 2:
-        return <AddRoomDetails register={register} errors={errors} />;
+        return (
+          <AddRoomDetails register={register} errors={errors} disable={true} />
+        );
       case 3:
         return (
           <AddPictures
@@ -101,25 +127,13 @@ export default function Profile() {
         key: amenity.name,
         value: !!data[amenity.name],
       }));
-      // console.log(amenitiesArray);
-      // const roomsArray = Array.from(
-      //   { length: data.numberOfRooms },
-      //   (_, index) => ({
-      //     [index]: ["free", "clean"],
-      //   })
-      // ).reduce((acc, room) => ({ ...acc, ...room }), {});
-
-      // console.log(roomsArray);
-      // Uploading images and getting there download urls
       const uploadPromises = selectedFiles.map(async ({ file }) => {
         const uniqueRef = ref(storage, `hotelPhotos/${user.uid}/${file.name}`);
         await uploadBytes(uniqueRef, file);
-        // Get download URL after uploading
         const url = await getDownloadURL(uniqueRef);
         photoURLs.push(url);
       });
       await Promise.all(uploadPromises);
-      // updating the hotels table
       await updateDoc(doc(db, "hotels", user.uid), {
         photos: photoURLs,
         amenitiesArray: amenitiesArray,
@@ -137,7 +151,6 @@ export default function Profile() {
         roomSize: data.roomSize,
         maxPersons: data.maxPersons,
         bookingPrice: data.bookingPrice,
-        // roomsArray: roomsArray,
       });
       toast.success("Profile saved successfully!");
       setActivePage(0);

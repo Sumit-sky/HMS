@@ -18,6 +18,7 @@ import {
   AiFillInstagram,
   AiFillYoutube,
 } from "react-icons/ai";
+import { toast } from "react-toastify";
 
 export default function ContactForm() {
   const { userData, user } = useUser();
@@ -55,7 +56,7 @@ export default function ContactForm() {
         });
       }
       reset();
-      setMsg("Your feedback has been submitted");
+      toast.info("Your feedback has been submitted");
     } catch (error) {
       setError(error.message);
     }

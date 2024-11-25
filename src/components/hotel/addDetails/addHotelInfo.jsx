@@ -46,13 +46,10 @@ export default function AddHotelInfo() {
             setSelectedFiles={setSelectedFiles}
           />
         );
-      default:
-        return <div>Select an option from the sidebar</div>;
     }
   };
 
   const handleNextClick = () => {
-    // setActivePage(activePage + 1);
     handleSubmit(() => {
       setActivePage(activePage + 1);
     })();
@@ -85,7 +82,7 @@ export default function AddHotelInfo() {
       const roomsArray = Array.from(
         { length: data.numberOfRooms },
         (_, index) => ({
-          [index]: ["free", "clean"],
+          [index]: ["Free", "Clean"],
         })
       ).reduce((acc, room) => ({ ...acc, ...room }), {});
 

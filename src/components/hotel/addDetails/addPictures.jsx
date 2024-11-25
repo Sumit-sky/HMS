@@ -36,7 +36,7 @@ export default function AddPictures({ selectedFiles, setSelectedFiles }) {
     const updatedFiles = selectedFiles.filter((_, i) => i !== index);
 
     // Revoke the object URL for newly added images to prevent memory leaks
-    if (selectedFiles[index].file) {
+    if (selectedFiles[index].file && selectedFiles[index].preview) {
       URL.revokeObjectURL(selectedFiles[index].preview);
     }
 
@@ -65,7 +65,7 @@ export default function AddPictures({ selectedFiles, setSelectedFiles }) {
       </div>
 
       <div className="mt-4 flex flex-wrap gap-4">
-        {selectedFiles.map(({ preview }, index) => (
+        {selectedFiles.map((fileData, index) => (
           <div key={index} className="h-max w-max relative">
             <button
               type="button"
@@ -75,7 +75,7 @@ export default function AddPictures({ selectedFiles, setSelectedFiles }) {
               <IoIosClose />
             </button>
             <img
-              src={preview}
+              src={fileData.preview || fileData.url} // Use `preview` if available; otherwise, fallback to `url`
               alt={`Preview ${index + 1}`}
               className="w-24 h-24 object-cover rounded-md shadow-md"
             />

@@ -87,6 +87,17 @@ export default function HotelInfo({ hotel }) {
           </li>
         </ul>
       </div>
+      <div className="pb-5 w-full">
+        <iframe
+          width="100%"
+          height="450"
+          loading="lazy"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_GOOGLE_MAPS_APIKEY} 
+    &q=${hotel.address}, ${hotel.city}, ${hotel.pinCode}`}
+        ></iframe>
+      </div>
     </div>
   );
 }

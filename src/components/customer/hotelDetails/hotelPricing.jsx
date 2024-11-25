@@ -50,6 +50,8 @@ export default function HotelPricing({ hotel }) {
       data.rooms = rooms;
     }
     setIsLoading(true);
+    const price = data.rooms * hotel.bookingPrice;
+
     try {
       const docId = uuidv4();
       await setDoc(doc(db, "bookings", docId), {
@@ -68,7 +70,7 @@ export default function HotelPricing({ hotel }) {
         hotelAddress: hotel.address + ", " + hotel.city + ", " + hotel.pinCode,
         hotelEmail: hotel.email,
         status: "booked",
-        price: data.rooms * hotel.bookingPrice,
+        price: price,
       });
 
       await updateDoc(doc(db, "customers", user.uid), {
@@ -76,7 +78,6 @@ export default function HotelPricing({ hotel }) {
       });
       await updateDoc(doc(db, "hotels", hotel.id), {
         bookings: arrayUnion(docId),
-        // freeRooms: hotel.freeRooms - data.rooms, do this when check in
       });
       toast.success("Hotel booked successfully!");
       reset();
@@ -153,7 +154,7 @@ export default function HotelPricing({ hotel }) {
           <button
             type="submit"
             disabled={isLoading}
-            className="bg-blue-500 w-full text-white px-4 py-3 mt-3 rounded-md"
+            className="bg-[#7C6A46] w-full text-white px-4 py-3 mt-3 rounded-md"
           >
             {isLoading ? (
               <svg

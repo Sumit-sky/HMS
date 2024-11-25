@@ -1,7 +1,7 @@
 import React from "react";
 import AddBasicDetailsInput from "./AddBasicDetailsInput";
 
-export default function AddRoomDetails({ register, errors }) {
+export default function AddRoomDetails({ register, errors, disable }) {
   return (
     <>
       <h1 className="w-full text-left text-xl mb-3">Room Details</h1>
@@ -14,6 +14,7 @@ export default function AddRoomDetails({ register, errors }) {
           name={"numberOfRooms"}
           placeholder={"Total number of Rooms"}
           error={errors.numberOfRooms}
+          disable={disable}
           validation={{
             required: "Number of Rooms is required",
             pattern: {

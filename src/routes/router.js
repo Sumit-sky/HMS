@@ -24,6 +24,7 @@ import ResetPass from '../pages/forgotPassword/resetPass';
 import HotelProfile from '../pages/hotel/hotelProfile';
 import AboutUs from '../pages/aboutUs';
 import BookingSuccessPage from '../pages/customer/bookingSuccessPage';
+import PrivacyPolicy from '../pages/privacyPolicy';
 
 export default function Router() {
   return (
@@ -50,6 +51,7 @@ export default function Router() {
         {/* Common Pages */}
         <Route path='/contact' element={<ContactUs />}></Route>
         <Route path='/about' element={<AboutUs />}></Route>
+        <Route path='/privacy-policy' element={<PrivacyPolicy />}></Route>
         <Route path='/forgotPassword' element={<ForgotPasswordPage />}></Route>
         <Route path='/resetPassword' element={<ResetPass />}></Route>
       </Routes>

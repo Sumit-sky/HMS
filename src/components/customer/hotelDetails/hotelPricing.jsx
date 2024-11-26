@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { updateDoc, doc, arrayUnion, setDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import { v4 as uuidv4 } from "uuid";
+import { Link } from "react-router-dom";
 
 export default function HotelPricing({ hotel }) {
   const navigate = useNavigate();
@@ -182,6 +183,7 @@ export default function HotelPricing({ hotel }) {
             )}
           </button>
         </form>
+        <Link to={"/privacy-policy#CancelPolicy"} className="text-red-500 mt-3 font-semibold text-lg">View Cancellation Policy</Link>
       </div>
     </div>
   );

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "../../../config/firebase";
 import { db } from "../../../config/firebase";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 export default function BookingHistory() {
   const { userData } = useUser();
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingBookingId, setLoadingBookingId] = useState(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -17,19 +18,41 @@ export default function BookingHistory() {
       }
 
       try {
-        const bookingPromises = userData.bookingHistory.map(
-          async (bookingId) => {
-            const bookingDocRef = doc(db, "bookings", bookingId);
-            const bookingDoc = await getDoc(bookingDocRef);
-            if (bookingDoc.exists()) {
-              return { id: bookingId, ...bookingDoc.data() };
-            }
-            return null;
+        const bookingPromises = userData.bookingHistory.map(async (bookingId) => {
+          const bookingDocRef = doc(db, "bookings", bookingId);
+          const bookingDoc = await getDoc(bookingDocRef);
+          if (bookingDoc.exists()) {
+            return { id: bookingId, ...bookingDoc.data() };
           }
-        );
+          return null;
+        });
 
         const fetchedBookings = await Promise.all(bookingPromises);
-        setBookings(fetchedBookings.filter(Boolean));
+
+        // Status priority map
+        const statusPriority = {
+          booked: 1,
+          checkedIn: 2,
+          checkedOut: 3,
+          earlyCheckOut: 4,
+          cancelled: 5,
+        };
+
+        // Sort bookings by check-in date and status priority
+        const sortedBookings = fetchedBookings
+          .filter(Boolean)
+          .sort((a, b) => {
+            const dateA = new Date(a.startDate);
+            const dateB = new Date(b.startDate);
+
+            if (dateA.getTime() !== dateB.getTime()) {
+              return dateA - dateB; // Earlier dates first
+            }
+
+            return statusPriority[a.status] - statusPriority[b.status]; // Higher priority first
+          });
+
+        setBookings(sortedBookings);
       } catch (error) {
         console.error("Error fetching bookings:", error);
         toast.error("Failed to load booking history");
@@ -40,6 +63,26 @@ export default function BookingHistory() {
 
     fetchBookings();
   }, [userData]);
+
+  const handleBookingCancel = async (booking) => {
+    setLoadingBookingId(booking.id);
+    try {
+      await updateDoc(doc(db, "bookings", booking.id), {
+        status: "cancelled",
+      });
+
+      toast.success("Booking Cancelled");
+      setBookings((prevBookings) =>
+        prevBookings.map((b) =>
+          b.id === booking.id ? { ...b, status: "cancelled" } : b
+        )
+      );
+    } catch (error) {
+      toast.error("Something went wrong, Try again!");
+    } finally {
+      setLoadingBookingId(null);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -62,22 +105,54 @@ export default function BookingHistory() {
                 <div className="flex w-full justify-evenly p-3">
                   <p>Rooms Booked: {booking.rooms}</p>
                   <p>
-                    Check-in: {new Date(booking.startDate).toLocaleDateString()}
-                    , {booking.checkInTime} PM
+                    Check-in: {new Date(booking.startDate).toLocaleDateString()},
+                    {booking.checkInTime} PM
                   </p>
                   <p>
-                    Check-out: {new Date(booking.endDate).toLocaleDateString()},{" "}
+                    Check-out: {new Date(booking.endDate).toLocaleDateString()},
                     {booking.checkOutTime} AM
                   </p>
                 </div>
-
+                <p>Status: {booking.status}</p>
                 <p>Contact : {booking.hotelContact}</p>
                 <p>Email : {booking.hotelEmail}</p>
                 <p>Address : {booking.hotelAddress}</p>
+                {booking.status === "booked" && (
+                  <button
+                    className="p-2 px-4 bg-red-500 my-3 text-white w-[150px]"
+                    onClick={() => handleBookingCancel(booking)}
+                    disabled={loadingBookingId === booking.id}
+                  >
+                    {loadingBookingId === booking.id ? (
+                      <svg
+                        className="animate-spin h-5 w-5 mx-auto"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                    ) : (
+                      "Cancel Booking"
+                    )}
+                  </button>
+                )}
               </div>
               <img
                 src={booking.hotelPhoto}
-                alt=""
+                alt="Hotel Preview"
                 className="w-[200px] rounded-md"
               />
             </div>

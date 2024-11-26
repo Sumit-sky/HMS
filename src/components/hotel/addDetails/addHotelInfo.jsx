@@ -107,7 +107,7 @@ export default function AddHotelInfo() {
         roomsArray: roomsArray,
       });
       toast.success("Profile saved successfully!");
-      navigate("/hotel/profile");
+      navigate("/hotel/dashboard/overview");
       setSelectedFiles([]);
     } catch (error) {
       console.error(error);

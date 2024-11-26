@@ -115,7 +115,7 @@ export default function HomeHotels({
         <div className="w-full">
           <div
             id="AreaHotels"
-            className="w-11/12 flex flex-wrap justify-start gap-10 items-center text-[#7C6A46] my-10"
+            className="w-full flex flex-wrap justify-start gap-10 items-center text-[#7C6A46] my-10"
           >
             {sortedHotels.length > 0 ? (
               sortedHotels

@@ -38,7 +38,7 @@ export default function GoogleAuth({ type }) {
       if (type === "customer") {
         navigate("/");
       } else if (type === "hotel") {
-        navigate("/hotel/dashboard");
+        navigate("/hotel/dashboard/overview");
       }
     } catch (error) {
       // console.log(error.message);

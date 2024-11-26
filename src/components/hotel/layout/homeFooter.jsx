@@ -12,6 +12,7 @@ export default function HomeFooter() {
           <FooterLinkContainer
             heading={"Quick Links"}
             links={[
+              { title: "Customer Home", path: "/" },
               { title: "User Registration", path: "/signup" },
               { title: "User Login", path: "/signin" },
             ]}
@@ -20,9 +21,8 @@ export default function HomeFooter() {
             heading={"Company"}
             links={[
               { title: "Contact", path: "/contact" },
-              { title: "Privacy Policy", path: "#" },
+              { title: "Privacy Policy", path: "/privacy-policy" },
               { title: "About", path: "/about" },
-              { title: "FAQs", path: "#" },
             ]}
           />
           <FooterLinkContainer

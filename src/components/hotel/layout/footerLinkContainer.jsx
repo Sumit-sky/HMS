@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function FooterLinkContainer({ heading, links }) {
   return (
@@ -7,7 +8,7 @@ export default function FooterLinkContainer({ heading, links }) {
       {links &&
         links.map((item, index) => (
           <li className="mb-1" key={index}>
-            <a href={item.path}>{item.title}</a>
+            <Link to={item.path}>{item.title}</Link>
           </li>
         ))}
     </ul>

@@ -20,9 +20,9 @@ export default function HomeFooter() {
           <FooterLinkContainer
             heading={"Company"}
             links={[
-              { title: "Contact", path: "#" },
+              { title: "Contact", path: "/contact" },
               { title: "Privacy Policy", path: "#" },
-              { title: "About", path: "#" },
+              { title: "About", path: "/about" },
               { title: "FAQs", path: "#" },
             ]}
           />

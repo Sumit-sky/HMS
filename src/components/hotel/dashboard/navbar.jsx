@@ -1,44 +1,33 @@
 import React from "react";
 import { Link } from "react-router-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faBell } from "@fortawesome/free-regular-svg-icons";
-// import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { useUser } from "../../../config/firebase";
 import logo from "../../../Assets/logo.png";
 import AccSection from "../layout/accSection";
+import NavbarLink from "../layout/navbarLink";
 
 export default function HotelNavbar() {
+  const { user } = useUser();
   return (
-    <nav className="w-full p-4 shadow-md bg-white">
-      <div className="mx-auto flex items-center justify-between">
-        <div className="flex items-center w-1/2">
-          <Link to={"/hotel/home"} className="flex items-center">
-            <img src={logo} alt="StayPedia Logo" className="w-20 h-14" />
-          </Link>
-
-          {/* <div className="flex flex-grow mx-4">
-            <form className="w-full">
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <FontAwesomeIcon
-                    icon={faMagnifyingGlass}
-                    size="lg"
-                    className="text-gray-500"
-                  />
-                </span>
-                <input
-                  type="text"
-                  placeholder="Search for rooms and offers"
-                  className="pl-10 py-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-gray-300"
-                />
-              </div>
-            </form>
-          </div> */}
-        </div>
-
-        <div className="flex items-center space-x-6">
-          {/* <FontAwesomeIcon icon={faBell} size="lg" className="text-gray-700" /> */}
-          <AccSection />
-        </div>
+    <nav className="bg-white w-full px-4 py-2 flex items-center justify-between shadow-md h-[80px]">
+      <Link to={"/hotel/home"} className="flex items-center">
+        <img src={logo} alt="StayPedia Logo" className="w-20" />
+      </Link>
+      <div className="hidden md:flex flex-grow justify-center space-x-10">
+        <NavbarLink text={"Dashboard"} path={"/hotel/dashboard"} />
+        <NavbarLink text={"Home"} path={"/hotel/home"} />
+        <NavbarLink text={"About"} path={"/about"} />
+        <NavbarLink text={"Contact"} path={"/contact"} />
+      </div>
+      <div className="hidden md:flex space-x-3">
+        <Link
+          to={"/hotel/signin"}
+          className={`px-4 py-2 bg-[#6A9BB6] w-[140px] text-white rounded ${
+            user ? "hidden" : "block"
+          }`}
+        >
+          Login
+        </Link>
+        <AccSection />
       </div>
     </nav>
   );

@@ -15,7 +15,7 @@ export default function HomeNavbar() {
       </Link>
       <div className="hidden md:flex flex-grow justify-center space-x-10">
         <NavbarLink text={"Home"} path={"/hotel/home"} />
-        <NavbarLink text={"About"} path={"#"} />
+        <NavbarLink text={"Dashboard"} path={"/hotel/dashboard"} />
         <NavbarLink text={"Contact"} path={"/contact"} />
       </div>
       <div className="hidden md:flex space-x-3">

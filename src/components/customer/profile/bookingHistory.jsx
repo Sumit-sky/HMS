@@ -62,10 +62,12 @@ export default function BookingHistory() {
                 <div className="flex w-full justify-evenly p-3">
                   <p>Rooms Booked: {booking.rooms}</p>
                   <p>
-                    Check-in: {new Date(booking.startDate).toLocaleDateString()}, {booking.checkInTime} PM
+                    Check-in: {new Date(booking.startDate).toLocaleDateString()}
+                    , {booking.checkInTime} PM
                   </p>
                   <p>
-                    Check-out: {new Date(booking.endDate).toLocaleDateString()}, {booking.checkOutTime} AM
+                    Check-out: {new Date(booking.endDate).toLocaleDateString()},{" "}
+                    {booking.checkOutTime} AM
                   </p>
                 </div>
 

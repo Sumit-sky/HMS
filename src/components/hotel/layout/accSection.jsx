@@ -60,7 +60,7 @@ export default function AccSection() {
           onMouseLeave={handleMouseLeave}
         >
           <Link
-            to={"/hotel/profile"}
+            to={"/hotel/hotel-details"}
             className="w-full py-2 hover:bg-gray-300 rounded-lg"
           >
             Profile

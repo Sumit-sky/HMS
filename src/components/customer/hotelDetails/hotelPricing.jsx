@@ -81,7 +81,7 @@ export default function HotelPricing({ hotel }) {
       });
       toast.success("Hotel booked successfully!");
       reset();
-      navigate("/profile");
+      navigate("/booking-success");
     } catch (error) {
       console.log(error);
       toast.error("An error occurred while booking");

@@ -59,7 +59,10 @@ export default function AccSection() {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <Link to={"/profile"} className="py-2 hover:bg-gray-300 rounded-lg">
+          <Link
+            to={"/profile/my-profile"}
+            className="py-2 hover:bg-gray-300 rounded-lg"
+          >
             Profile
           </Link>
           <button

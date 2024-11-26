@@ -14,15 +14,14 @@ export default function HomeFooter() {
             links={[
               { title: "User Registration", path: "/signup" },
               { title: "User Login", path: "/signin" },
-              { title: "Room Booking", path: "#" },
             ]}
           />
           <FooterLinkContainer
             heading={"Company"}
             links={[
-              { title: "Contact", path: "#" },
+              { title: "Contact", path: "/contact" },
               { title: "Privacy Policy", path: "#" },
-              { title: "About", path: "#" },
+              { title: "About", path: "/about" },
               { title: "FAQs", path: "#" },
             ]}
           />

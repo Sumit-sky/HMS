@@ -12,6 +12,7 @@ export default function HomeHotels({
 }) {
   const [hotels, setHotels] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [sortOrder, setSortOrder] = useState("asc"); // State for sorting order
   const savedPinCode = localStorage.getItem("userPinCode");
   const navigate = useNavigate();
 
@@ -38,6 +39,13 @@ export default function HomeHotels({
     }
   }, [pinCode]);
 
+  // Sort hotels by price whenever the sortOrder changes
+  const sortedHotels = [...hotels].sort((a, b) =>
+    sortOrder === "asc"
+      ? a.bookingPrice - b.bookingPrice
+      : b.bookingPrice - a.bookingPrice
+  );
+
   if (!isGeolocationEnabled) {
     return (
       <div className="p-10 w-full">
@@ -53,11 +61,28 @@ export default function HomeHotels({
 
   return (
     <div className="w-full flex flex-col justify-center items-center p-10">
-      <h1 className="w-full text-left text-3xl font-semibold">
-        {pinCode === savedPinCode
-          ? `Hotels in Your Location`
-          : `Search Results`}
-      </h1>
+      <div className="flex w-full justify-between items-center">
+        <h1 className="w-full text-left text-3xl font-semibold">
+          {pinCode === savedPinCode
+            ? `Hotels in Your Location`
+            : `Search Results`}
+        </h1>
+        <div className="flex justify-end items-center w-11/12 mb-4">
+          <label htmlFor="sortOrder" className="mr-2 text-xl font-medium">
+            Sort by:
+          </label>
+          <select
+            id="sortOrder"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md"
+          >
+            <option value="asc">Price: Low to High</option>
+            <option value="desc">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+
       {isLoading || gettingLocation ? (
         <div className="w-full text-black flex justify-center items-center flex-col z-50">
           <svg
@@ -87,76 +112,80 @@ export default function HomeHotels({
           </p>
         </div>
       ) : (
-        <div
-          id="AreaHotels"
-          className="w-11/12 flex flex-wrap justify-start gap-10 items-center text-[#7C6A46] my-10"
-        >
-          {hotels.length > 0 ? (
-            hotels
-              .filter((hotel) => hotel.freeRooms > 0)
-              .map((hotel) => (
-                <div
-                  key={hotel.id}
-                  onClick={() =>
-                    navigate("/detailed-hotel-info", { state: hotel })
-                  }
-                  className="w-[390px] bg-white border border-gray-200 h-[414px] hover:shadow-[0_0_25px_-10px_rgba(0,0,0,0.5)] hover:cursor-pointer m-4 rounded-lg transition-all ease-in-out duration-500"
-                >
-                  <Carousel
-                    showThumbs={false}
-                    showStatus={false}
-                    infiniteLoop={true}
-                    autoPlay={true}
-                    showIndicators={false}
+        <div className="w-full">
+          <div
+            id="AreaHotels"
+            className="w-11/12 flex flex-wrap justify-start gap-10 items-center text-[#7C6A46] my-10"
+          >
+            {sortedHotels.length > 0 ? (
+              sortedHotels
+                .filter((hotel) => hotel.freeRooms > 0)
+                .map((hotel) => (
+                  <div
+                    key={hotel.id}
+                    onClick={() =>
+                      navigate("/detailed-hotel-info", { state: hotel })
+                    }
+                    className="w-[390px] bg-white border border-gray-200 h-[414px] hover:shadow-[0_0_25px_-10px_rgba(0,0,0,0.5)] hover:cursor-pointer m-4 rounded-lg transition-all ease-in-out duration-500"
                   >
-                    {hotel.photos.map((photo, index) => (
-                      <img
-                        key={index}
-                        src={photo}
-                        alt={hotel.hotelName}
-                        className="w-full h-[250px] rounded-lg"
-                      />
-                    ))}
-                  </Carousel>
-                  <div className="flex justify-between p-2">
-                    <p className="text-xl font-semibold">{hotel.hotelName}</p>
-                    <p>Available: {hotel.freeRooms > 0 ? "Yes" : "No"}</p>
-                  </div>
-                  <p className="text-xl font-semibold w-full text-left p-2">
-                    Rs {hotel.bookingPrice}
-                  </p>
-                  <hr className="border-[#7C6A46]" />
-                  <div className="flex justify-between">
-                    <div className="flex">
-                      {hotel.amenitiesArray
-                        .filter((amenity) => amenity.value) // Filter for amenities with value true
-                        .map((amenity) => {
-                          // Find the corresponding entry in amenitiesList
-                          const matchedAmenity = amenitiesList.find(
-                            (item) => item.name === amenity.key
-                          );
-                          return (
-                            matchedAmenity && ( // Only render if a match is found
-                              <span
-                                key={matchedAmenity.name}
-                                className="flex items-center justify-center p-1 m-1"
-                                title={matchedAmenity.label} // Optional: Show the amenity label on hover
-                              >
-                                {matchedAmenity.icon}
-                              </span>
-                            )
-                          );
-                        })}
+                    <Carousel
+                      showThumbs={false}
+                      showStatus={false}
+                      infiniteLoop={true}
+                      autoPlay={true}
+                      showIndicators={false}
+                    >
+                      {hotel.photos.map((photo, index) => (
+                        <img
+                          key={index}
+                          src={photo}
+                          alt={hotel.hotelName}
+                          className="w-full h-[250px] rounded-lg"
+                        />
+                      ))}
+                    </Carousel>
+                    <div className="flex justify-between p-2">
+                      <p className="text-xl font-semibold">{hotel.hotelName}</p>
+                      <p>Available: {hotel.freeRooms > 0 ? "Yes" : "No"}</p>
                     </div>
-                    <button className="bg-[#7C6A46] p-3 px-5 m-3 text-white float-end outline-none rounded-lg">
-                      Book Now
-                    </button>
+                    <p className="text-xl font-semibold w-full text-left p-2">
+                      Rs {hotel.bookingPrice}
+                    </p>
+                    <hr className="border-[#7C6A46]" />
+                    <div className="flex justify-between">
+                      <div className="flex">
+                        {hotel.amenitiesArray
+                          .filter((amenity) => amenity.value) // Filter for amenities with value true
+                          .map((amenity) => {
+                            // Find the corresponding entry in amenitiesList
+                            const matchedAmenity = amenitiesList.find(
+                              (item) => item.name === amenity.key
+                            );
+                            return (
+                              matchedAmenity && ( // Only render if a match is found
+                                <span
+                                  key={matchedAmenity.name}
+                                  className="flex items-center justify-center p-1 m-1"
+                                  title={matchedAmenity.label} // Optional: Show the amenity label on hover
+                                >
+                                  {matchedAmenity.icon}
+                                </span>
+                              )
+                            );
+                          })}
+                      </div>
+                      <button className="bg-[#7C6A46] p-3 px-5 m-3 text-white float-end outline-none rounded-lg">
+                        Book Now
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))
-          ) : (
-            <div className="text-center">No hotels found in your location</div>
-          )}
+                ))
+            ) : (
+              <div className="text-center">
+                No hotels found in your location
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

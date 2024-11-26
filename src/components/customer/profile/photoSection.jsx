@@ -4,8 +4,9 @@ import { FaRegUser, FaPen } from "react-icons/fa6";
 import { db, storage } from "../../../config/firebase";
 import { updateDoc, doc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { Link } from "react-router-dom";
 
-export default function PhotoSection({ activeSection, setActiveSection }) {
+export default function PhotoSection({ activeSection }) {
   const { userData, user } = useUser();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -99,23 +100,23 @@ export default function PhotoSection({ activeSection, setActiveSection }) {
         {userData.firstName + " " + userData.lastName}
       </p>
       {error && <p className="text-red-500">{error}</p>}
-      <div className="text-lg my-4 text-left w-full">
-        <button
+      <div className="text-lg my-4 w-full flex flex-col text-center">
+        <Link
+          to={"/profile/my-profile"}
           className={`w-full p-2 rounded-lg  ${
             activeSection === 1 ? "bg-[#7C6A46] text-white" : ""
           }`}
-          onClick={() => setActiveSection(1)}
         >
           My Profile
-        </button>
-        <button
+        </Link>
+        <Link
+          to={"/profile/booking-history"}
           className={`w-full p-2 rounded-lg  ${
             activeSection === 2 ? "bg-[#7C6A46] text-white" : ""
           }`}
-          onClick={() => setActiveSection(2)}
         >
           Booking History
-        </button>
+        </Link>
       </div>
     </div>
   );

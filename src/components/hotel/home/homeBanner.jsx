@@ -13,7 +13,7 @@ export default function HomeBanner() {
           Skyrocket your hotel conversion rate and improve the customer journey{" "}
           <br /> with smart online management.
         </p>
-        <Link to={"#"} className="text-[#666666] bg-white p-1 px-3 font-semibold rounded-lg my-3">Ask a Question</Link>
+        <Link to={"/contact"} className="text-[#666666] bg-white p-1 px-3 font-semibold rounded-lg my-3">Ask a Question</Link>
         <img src={hotel_Home} alt="Banner" className="my-3" />
       </div>
     </div>

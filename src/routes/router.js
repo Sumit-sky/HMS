@@ -43,7 +43,7 @@ export default function Router() {
         <Route path='/hotel/home' element={<CustomerRoutes><HotelHome /></CustomerRoutes>}></Route>
         <Route path='/hotel/signup' element={<HotelSignUp />}></Route>
         <Route path='/hotel/signin' element={<HotelLogin />}></Route>
-        <Route path='/hotel/dashboard' element={<ProtectedHotelRoutes><HotelDashboard /></ProtectedHotelRoutes>}></Route>
+        <Route path='/hotel/dashboard/:section' element={<ProtectedHotelRoutes><HotelDashboard /></ProtectedHotelRoutes>}></Route>
         <Route path='/hotel/hotel-details' element={<ProtectedHotelRoutes><AddDetails /></ProtectedHotelRoutes>}></Route>
         <Route path='/hotel/profile' element={<ProtectedHotelRoutes><HotelProfile /></ProtectedHotelRoutes>}></Route>
 

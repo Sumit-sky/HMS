@@ -4,27 +4,38 @@ import HotelSidebar from "../../components/hotel/dashboard/sidebar";
 import Content from "../../components/hotel/dashboard/content";
 import { useUser } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export default function HotelDashboard() {
   const navigate = useNavigate();
-  const [active, setActive] = useState(0);
+  const { section } = useParams();
   const { isHotel, userData } = useUser();
+  const [active, setActive] = useState(0);
 
-  // Redirect user based on their role/status after authentication
   useEffect(() => {
-    if (isHotel) {
+    if (section === 'overview') setActive(0);
+    if (section === 'bookings') setActive(1);
+    if (section === 'guests') setActive(2);
+    if (section === 'rooms') setActive(3);
+  }, [section]);
+
+  useEffect(() => {
+    if (isHotel && userData) {
       const hotelDestination =
-        userData?.photos?.length > 0
-          ? "/hotel/dashboard"
+        userData.photos?.length > 0
+          ? `/hotel/dashboard/${section}`
           : "/hotel/hotel-details";
-      navigate(hotelDestination, { replace: true });
+      if (window.location.pathname !== hotelDestination) {
+        navigate(hotelDestination, { replace: true });
+      }
     }
   }, [isHotel, userData, navigate]);
+
   return (
     <>
       <HotelNavbar />
       <div className="flex w-full">
-        <HotelSidebar active={active} setActive={setActive} />
+        <HotelSidebar active={active} />
         <Content active={active} />
       </div>
     </>

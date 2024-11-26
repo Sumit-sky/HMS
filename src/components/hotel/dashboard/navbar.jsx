@@ -13,7 +13,7 @@ export default function HotelNavbar() {
         <img src={logo} alt="StayPedia Logo" className="w-20" />
       </Link>
       <div className="hidden md:flex flex-grow justify-center space-x-10">
-        <NavbarLink text={"Dashboard"} path={"/hotel/dashboard"} />
+        <NavbarLink text={"Dashboard"} path={"/hotel/dashboard/overview"} />
         <NavbarLink text={"Home"} path={"/hotel/home"} />
         <NavbarLink text={"About"} path={"/about"} />
         <NavbarLink text={"Contact"} path={"/contact"} />

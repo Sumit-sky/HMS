@@ -8,7 +8,7 @@ import IconRate from "../../../Assets/hotel_svgs/iconRate";
 import IconRooms from "../../../Assets/hotel_svgs/iconRooms";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
-export default function HotelSidebar({ active, setActive }) {
+export default function HotelSidebar({ active }) {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
   const toggleSidebar = () => {
@@ -22,42 +22,28 @@ export default function HotelSidebar({ active, setActive }) {
           <SidebarButton
             index={0}
             active={active}
-            setActive={setActive}
+            path={"/hotel/dashboard/overview"}
             icon={IconDashboard}
             label="Dashboard"
           />
-          {/* <SidebarButton
-            index={1}
-            active={active}
-            setActive={setActive}
-            icon={IconFrontDesk}
-            label="Front Desk"
-          /> */}
           <SidebarButton
             index={1}
             active={active}
-            setActive={setActive}
+            path={"/hotel/dashboard/bookings"}
             icon={IconGuest}
             label="Bookings"
           />
           <SidebarButton
             index={2}
             active={active}
-            setActive={setActive}
+            path={"/hotel/dashboard/guests"}
             icon={IconRooms}
             label="Guests"
           />
-          {/* <SidebarButton
-            index={4}
-            active={active}
-            setActive={setActive}
-            icon={IconDeals}
-            label="Deals"
-          /> */}
           <SidebarButton
             index={3}
             active={active}
-            setActive={setActive}
+            path={"/hotel/dashboard/rooms"}
             icon={IconRate}
             label="Rooms"
           />

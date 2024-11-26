@@ -66,7 +66,7 @@ export default function AccSection() {
             Profile
           </Link>
           <Link
-            to={"/hotel/dashboard"}
+            to={"/hotel/dashboard/overview"}
             className="py-2 hover:bg-gray-300 rounded-lg"
           >
             Dashboard

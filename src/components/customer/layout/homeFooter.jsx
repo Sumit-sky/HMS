@@ -12,9 +12,10 @@ export default function HomeFooter() {
           <FooterLinkContainer
             heading={"Quick Links"}
             links={[
+              { title: "Hotel Home", path: "/hotel/home" },
               { title: "Register Hotel", path: "/hotel/signup" },
               { title: "Hotel Login", path: "/hotel/signin" },
-              // { title: "Room Booking", path: "#" },
+
             ]}
           />
           <FooterLinkContainer
@@ -23,7 +24,6 @@ export default function HomeFooter() {
               { title: "Contact", path: "/contact" },
               { title: "Privacy Policy", path: "/privacy-policy" },
               { title: "About", path: "/about" },
-              { title: "FAQs", path: "#" },
             ]}
           />
           <FooterLinkContainer

@@ -50,6 +50,10 @@ export default function HotelPricing({ hotel }) {
       }
       data.rooms = rooms;
     }
+    if (data.rooms > hotel.freeRooms) {
+      toast.info("Rooms not available");
+      return
+    }
     setIsLoading(true);
     const price = data.rooms * hotel.bookingPrice;
 
@@ -183,7 +187,12 @@ export default function HotelPricing({ hotel }) {
             )}
           </button>
         </form>
-        <Link to={"/privacy-policy#CancelPolicy"} className="text-red-500 mt-3 font-semibold text-lg">View Cancellation Policy</Link>
+        <Link
+          to={"/privacy-policy#CancelPolicy"}
+          className="text-red-500 mt-3 font-semibold text-lg"
+        >
+          View Cancellation Policy
+        </Link>
       </div>
     </div>
   );

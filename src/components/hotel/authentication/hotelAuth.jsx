@@ -25,7 +25,7 @@ export default function HotelAuth() {
     } else if (isHotel) {
       const hotelDestination =
         userData?.photos?.length > 0
-          ? "/hotel/dashboard"
+          ? "/hotel/dashboard/overview"
           : "/hotel/hotel-details";
       navigate(hotelDestination, { replace: true });
     }

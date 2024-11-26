@@ -44,7 +44,7 @@ export default function HotelRegister() {
         const userDocRef = doc(db, "hotels", user.uid);
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists() && user.emailVerified) {
-          navigate("/hotel/dashboard");
+          navigate("/hotel/dashboard/overview");
         }
       }
       setInitializing(false);
